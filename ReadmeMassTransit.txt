@@ -1,5 +1,5 @@
 From: 011netservice@gmail.com
-Date: 2023-01-22
+Date: 2023-01-23
 Subject: MassTransit with RabbitMQ
 File: CodeHelper\cs\MessageQueue\MassTransit\ReaemeMassTransit.txt
 
