@@ -18,12 +18,14 @@ RabbitMQ:
   開發時需要 .NET 6 SDK, 執行時需要 .NET 6.0 以上.
   建議 Service 端可改用 .NET 6 以上 .NETCore
 
-2. 舊版 .NET 4.x
+2. .NET 4.x 
 ref: https://github.com/andras-nemes/messaging-with-mass-transit-introduction
-messaging-with-mass-transit-introduction-master.zip
+或 https://github.com/github-honda/MassTransitPratice/blob/main/Net48/messaging-with-mass-transit-introduction-master.zip
 
-3. 舊版 .NET 4.8
+3. .NET 4.8
+todo: 20230207
 目錄 Net48 將 .NET 4.x 的版本, 轉為 .NET 4.8, 並可搭配使用於(官網的.NET 6.測試環境) 
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48
 
 
 □ 初學者先了解過 (In Memory) 和 (RabbitMQ) 2個 Getting Started 再參考其他雲端架構的做法.
