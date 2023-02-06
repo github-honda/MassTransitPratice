@@ -1,7 +1,8 @@
 From: 011netservice@gmail.com
-Date: 2023-01-23
+Date: 2023-02-06
 Subject: MassTransit with RabbitMQ
-File: CodeHelper\cs\MessageQueue\MassTransit\ReaemeMassTransit.txt
+File: https://github.com/github-honda/MassTransitPratice/blob/main/ReadmeMassTransit.txt
+      CodeHelper\cs\MessageQueue\MassTransit\ReadmeMassTransit.txt
 
 歡迎來信交流, 訂購軟體需求.
 
@@ -11,25 +12,35 @@ MassTransit:
 RabbitMQ: 
   https://www.rabbitmq.com/
 
+原始碼:
+1. .NET 6 .NETCore
+  官網提供的 Sample code (in-memory transport 和 RabbitMQ) 為 Version 8 的 .NETCore 原始碼 
+  開發時需要 .NET 6 SDK, 執行時需要 .NET 6.0 以上.
+  建議 Service 端可改用 .NET 6 以上 .NETCore
+
+2. 舊版 .NET 4.x
+ref: https://github.com/andras-nemes/messaging-with-mass-transit-introduction
+messaging-with-mass-transit-introduction-master.zip
+
+3. 舊版 .NET 4.8
+目錄 Net48 將 .NET 4.x 的版本, 轉為 .NET 4.8, 並可搭配使用於(官網的.NET 6.測試環境) 
+
+
 □ 初學者先了解過 (In Memory) 和 (RabbitMQ) 2個 Getting Started 再參考其他雲端架構的做法.
-照著官網上的步驟產生的原始碼, 錯誤不少, 無法編譯成功.
-可改用筆者測試過的原始碼:  
-CodeHelper\cs\MessageQueue\MassTransit\GettingStarted-InMemory
-CodeHelper\cs\MessageQueue\MassTransit\GettingStarted-RabbitMq
+若照著官網上的步驟產生的原始碼, 無法編譯成功, 可改用筆者測試過的原始碼:  
+執行環境必須為 .NET 6.0 以上.
 
-public const string CCode34 = 
-"0123456789ABCDEFGHJKLMNPQRSTUVWXYZ!@#$%^&*()-={}:<>?;',./";
-
-????????????
 ○ in-memory transport
 https://masstransit-project.com/quick-starts/in-memory.html
 Getting Started - In Memory.pdf
+https://github.com/github-honda/MassTransitPratice/tree/main/GettingStarted-InMemory
 
 ○ RabbitMQ
 https://masstransit-project.com/quick-starts/rabbitmq.html
 Getting Started - RabbitMQ.pdf
+https://github.com/github-honda/MassTransitPratice/tree/main/GettingStarted-RabbitMq
 
-官網上或官網提供的 Sample code, 的程式碼
+
 
 
 摘要如下:
