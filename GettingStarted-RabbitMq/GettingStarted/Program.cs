@@ -21,13 +21,11 @@ namespace GettingStarted
 
                         x.UsingRabbitMq((context, cfg) =>
                         {
-                            // can't compiled !
-                            // https://masstransit-project.com/quick-starts/rabbitmq.html
-                            //cfg.Host("localhost", "/"), h =>
-                            //{
-                            //    h.Username("guest");
-                            //    h.Password("guest");
-                            //});
+                            cfg.Host("localhost", "/", h => 
+                            {
+                                h.Username("guest");
+                                h.Password("guest");                            
+                            });
                             cfg.ConfigureEndpoints(context);
                         });
                     });
