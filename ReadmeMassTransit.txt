@@ -1,53 +1,24 @@
 From: 011netservice@gmail.com
-Date: 2023-02-06
+Date: 2023-02-13
 Subject: MassTransit with RabbitMQ
 File: https://github.com/github-honda/MassTransitPratice/blob/main/ReadmeMassTransit.txt
       CodeHelper\cs\MessageQueue\MassTransit\ReadmeMassTransit.txt
 
 歡迎來信交流, 訂購軟體需求.
 
-MassTransit: 
+MassTransit:
+  https://masstransit.io/
   https://masstransit-project.com/
-  https://github.com/MassTransit
+  https://github.com/MassTransit/MassTransit
+  
 RabbitMQ: 
   https://www.rabbitmq.com/
 
-原始碼:
-1. .NET 6 .NETCore
-  官網提供的 Sample code (in-memory transport 和 RabbitMQ) 為 Version 8 的 .NETCore 原始碼 
-  開發時需要 .NET 6 SDK, 執行時需要 .NET 6.0 以上.
-  建議 Service 端可改用 .NET 6 以上 .NETCore
+建議初學者先了解 (In Memory) 和 (RabbitMQ) 2個 Getting Started, 執行環境必須為 .NET 6.0 以上.
 
-2. .NET 4.x 
-ref: https://github.com/andras-nemes/messaging-with-mass-transit-introduction
-或 https://github.com/github-honda/MassTransitPratice/blob/main/Net48/messaging-with-mass-transit-introduction-master.zip
-
-3. .NET 4.8
-todo: 20230207
-目錄 Net48 將 .NET 4.x 的版本, 轉為 .NET 4.8, 並可搭配使用於(官網的.NET 6.測試環境) 
-https://github.com/github-honda/MassTransitPratice/tree/main/Net48
-
-
-□ 初學者先了解過 (In Memory) 和 (RabbitMQ) 2個 Getting Started 再參考其他雲端架構的做法.
-若照著官網上的步驟產生的原始碼, 無法編譯成功, 可改用筆者測試過的原始碼:  
-執行環境必須為 .NET 6.0 以上.
-
-○ in-memory transport
-https://masstransit-project.com/quick-starts/in-memory.html
+□ GettingStarted-InMemory 
+https://masstransit.io/quick-starts/in-memory
 Getting Started - In Memory.pdf
-https://github.com/github-honda/MassTransitPratice/tree/main/GettingStarted-InMemory
-
-○ RabbitMQ
-https://masstransit-project.com/quick-starts/rabbitmq.html
-Getting Started - RabbitMQ.pdf
-https://github.com/github-honda/MassTransitPratice/tree/main/GettingStarted-RabbitMq
-
-
-
-
-摘要如下:
-□ Getting Started - In Memory
-https://masstransit-project.com/quick-starts/in-memory.html
 In-Memory 以記憶體傳輸模式特性:
 ◇ 不需要依賴訊息代理元件(例如 RabbitMQ).
 ◇ 只能在本機運作.
@@ -61,201 +32,314 @@ However, there are places where durability is not important so the cautionary ta
 WARNING
 The in-memory transport is intended for use within a single process only. It cannot be used to communicate between multiple processes (even if they are on the same machine).
 
-照著官網上的步驟產生的原始碼, 有些錯誤, 無法編譯成功.
-可改用或比對筆者測試過後的專案檔案:  
-CodeHelper\cs\MessageQueue\MassTransit\GettingStarted\GettingStarted.sln
-
+建立步驟:
 ○ 確認已安裝至少 SDK 6.0
 $ dotnet --list-sdks
 6.0.405 [C:\Program Files\dotnet\sdk]
 7.0.102 [C:\Program Files\dotnet\sdk]
 
-○ Install MassTransit Templates
-$ dotnet new install MassTransit.Templates
-別再用舊語法: $ dotnet new --install MassTransit.Templates
+○ 安裝 MassTransit.Templates
+Install MassTransit Templates
+$ dotnet new --install MassTransit.Templates
+成功: MassTransit.Templates::1.0.6 已安裝下列範本...
 
-○ Create the worker project
+○ 建立專案 
+Create the project
 $ dotnet new mtworker -n GettingStarted
 $ cd GettingStarted
 $ dotnet new mtconsumer
+原始碼可參考官網上的步驟產生, 或是從筆者的網站上取得:
+https://github.com/github-honda/MassTransitPratice/tree/main/NET60/GettingStarted
 
-When you open the project you will see that you have 3 class files.
-1. Program.cs is the standard entry point and here we configure the host builder.
-2. Consumers/GettingStartedConsumer.cs is the MassTransit Consumer
-3. Contracts/GettingStarted.cs is an example message
+舊版原始碼: 官網改到 https://masstransit.io/ 之前的原始碼也可以用.
+https://github.com/github-honda/MassTransitPratice/tree/main/GettingStarted-InMemory
 
-○ Add A BackgroundService Worker.cs
-In the root of the project add Worker.cs
+○ 執行程式
+$ dotnet run
+ 
+□  Getting Started - RabbitMQ
+https://masstransit.io/quick-starts/rabbitmq
 
-namespace GettingStarted;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Contracts;
-using MassTransit;
-using Microsoft.Extensions.Hosting;
-public class Worker : BackgroundService
-{
-    readonly IBus _bus;
-    public Worker(IBus bus)
-    {
-        _bus = bus;
-    }
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-    {
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            await _bus.Publish(new GettingStarted { Value = $"The time is {DateTimeOffset.Now}" }, stoppingToken);
+建立步驟:
+○ 確認 GettingStarted-InMemory 方式, 已可正確執行.
 
-            await Task.Delay(1000, stoppingToken);
-        }
-    }
-}
+○ Run RabbitMQ docker
+官網: $ docker run -p 15672:15672 -p 5672:5672 masstransit/rabbitmq
+建議改成:
+$ docker run -p 15672:15672 -p 5672:5672 --name masstransit1 masstransit/rabbitmq 
+  -p, --publish list                   Publish a container's port(s) to
+                                       the host
+15672 is the default port for RabbitMQ GUI, 
+5672 for RabbitMQ message broker.
 
-○ Register Worker
-In Program.cs at the bottom of the ConfigureServices method add
-services.AddHostedService<Worker>();
+因為若未加參數 --name, 則每次執行就會新增一個新的(自動命名)的 container image.
 
-○ Update your Consumer
-namespace GettingStarted.Consumers;
+若是 ARM platform, 則指令為 $ docker run --platform linux/arm64 -p 15672:15672 -p 5672:5672 masstransit/rabbitmq
 
-using System.Threading.Tasks;
-using Contracts;
-using MassTransit;
-using Microsoft.Extensions.Logging;
+○ 測試 RabbitMQ docker 管理介面
+瀏覽網頁到 http://localhost:15672 測試登入.
+登入帳號為 guest, 密碼guest, 這組預設帳密, 只能在本機 localhost 使用.
+15672 is the default port for RabbitMQ GUI, 
+5672 for RabbitMQ message broker.
+能看到網頁就好, 不需要登入也可以.
 
-public class GettingStartedConsumer :
-    IConsumer<GettingStarted>
-{
-    readonly ILogger<GettingStartedConsumer> _logger;
+或是用指令測試: $ docker exec [DockerImageName] rabbitmqctl status | 檢查 RabbitMQ Docker Image 的狀態.
+例如:
+$ docker exec MassTransit1 rabbitmqctl status
 
-    public GettingStartedConsumer(ILogger<GettingStartedConsumer> logger)
-    {
-        _logger = logger;
-    }
 
-    public Task Consume(ConsumeContext<GettingStarted> context)
-    {
-        _logger.LogInformation("Received Text: {Text}", context.Message.Value);
-        return Task.CompletedTask;
-    }
-}
+○ 在原專案中安裝 MassTransit.RabbitMQ package.
+$ dotnet add package MassTransit.RabbitMQ
+或是直接下載筆者的專案: https://github.com/github-honda/MassTransitPratice/tree/main/NET60/RabbitMQ
 
-○ Run the project
+○ 原專案原始碼修改
+可參考官網上的步驟修改, 或是從筆者的網站上取得:
+https://github.com/github-honda/MassTransitPratice/tree/main/NET60/RabbitMQ
+
+舊版原始碼: 官網改到 https://masstransit.io/ 之前的原始碼也可以用.
+https://github.com/github-honda/MassTransitPratice/tree/main/GettingStarted-RabbitMq
+
+○ 執行程式
 $ dotnet run
 
-The output should have changed to show the message consumer generating the output (again, press Control+C to exit).
-Building...
-info: MassTransit[0]
-      Configured endpoint Message, Consumer: GettingStarted.MessageConsumer
-info: MassTransit[0]
-      Bus started: loopback://localhost/
-info: Microsoft.Hosting.Lifetime[0]
-      Application started. Press Ctrl+C to shut down.
-info: Microsoft.Hosting.Lifetime[0]
-      Hosting environment: Development
-info: Microsoft.Hosting.Lifetime[0]
-      Content root path: /Users/chris/Garbage/start/GettingStarted
-info: GettingStarted.MessageConsumer[0]
-      Received Text: The time is 3/24/2021 12:02:01 PM -05:00
-info: GettingStarted.MessageConsumer[0]
-      Received Text: The time is 3/24/2021 12:02:02 PM -05:00
+
+#### 安裝 MassTransit1 (由 MassTransit 維護的 RabbitMQ Docker, 適用於 RabbitMQ with .NET 6, MassTransit 8.0 Samples) 
+□ 安裝 RabbitMQ Docker, 包括需要的 Plugins
+Run RabbitMQ
+This is running the preconfigured Docker image maintained by the MassTransit team (opens new window). 
+The container image includes the delayed exchange plug-in and the Management interface enabled.
+$ docker run -p 15672:15672 -p 5672:5672 --name masstransit1 masstransit/rabbitmq 
+
+  -p, --publish list                   Publish a container's port(s) to
+                                       the host
+15672 is the default port for RabbitMQ GUI, 
+5672 for RabbitMQ message broker.
+
+若未加參數 --name, 則每次執行就會新增一個新的(自動命名)的 container:
+$ docker run -p 15672:15672 -p 5672:5672 masstransit/rabbitmq
+
+○ If you are running on an ARM platform
+$ docker run --platform linux/arm64 -p 15672:15672 -p 5672:5672 masstransit/rabbitmq
+
+□ 測試 RabbitMQ Docker
+登入 rabbitmq broker
+安裝成功後, 可瀏覽網頁到 http://localhost:15672 測試登入.
+登入帳號guest, 密碼guest, 這組預設帳密只能在本機 localhost 使用.
+15672 is the default port for RabbitMQ GUI, 
+5672 for RabbitMQ message broker.
+
+或是用指令測試: 
+docker 必須已經啟動執行中.
 
 
-□ Getting Started - RabbitMQ
-https://masstransit-project.com/quick-starts/rabbitmq.html
-Getting Started - RabbitMQ.pdf
-https://masstransit-project.com/usage/transports/rabbitmq.html#minimal-example
+#### 安裝 MassTransit2 (由 MassTransit 維護的 RabbitMQ Docker, 適用於 RabbitMQ with .NET Framework 4.6.1, MassTransit 舊版 Samples) 
+???? 以下測試中, 待確認:
 
 
-○ 確認已安裝至少 SDK 6.0
+
+以前官網的範例是直接安裝 RabbitMQ 到主 Host, 再設定一些配合範例程式執行的 RabbitMQ 參數.
+筆者改成 1. 安裝 RabbitMQ Docker, 2. 設定 RabbitMQ 參數
+ref:
+https://dotnetcodr.com/2016/08/03/messaging-with-rabbitmq-and-net-review-part-2-installation-and-setup/
+
+□ 1. 安裝 RabbitMQ Docker
+請先參考(安裝 MassTransit1), 安裝 RabbitMQ Docker, 不要安裝 RabbitMQ 到主 Host.
+
+□ 2. 設定 RabbitMQ 參數
+安裝 RabbitMQ Docker 後, 啟動執行.
+再以瀏覽器連線到 http://localhost:15672, 以帳號 guest, 密碼 guest 登入.
+
+○ 設定 Virtual Hosts
+在 RabbitMQ 管理介面網頁上, 選擇 Admin.Virtual Hosts.Add virtual host 如下:
+Name: accounting
+Description: 空白
+Tags: 空白
+
+□ Add Users
+在 RabbitMQ 管理介面網頁上, 選擇 Admin.Users.Add Users 如下:
+Username: accountant
+Password: accountant
+Confirm:  accountant
+Tags: administrator (若非 predefined roles, 則無法登入管理介面).
+
+
+□ 授權 Virtual Host 給 User
+在 RabbitMQ 管理介面網頁上, 選擇 Admin.Users, 在使用者清單中選擇使用者, 例如 accountant.
+在 Permissions 區段中, 填入:
+Virtual Host: 選擇 accounting 
+Configure regexp: .*
+Write regexp: .*
+Read regexp: .*
+按下 Set Permission 按鍵後, 可看到新增授權在 Current permissions 清單中.
+
+
+#### RabbitMQ Docker 常用指令
+□ 測試 RabbitMQ Docker
+$ docker run -p 15672:15672 -p 5672:5672 --name MassTransit1 masstransit/rabbitmq  | 下載由 MassTransit 維護的 RabbitMQ Docker, 並命名為 MassTransit1
+-p, --publish list                   Publish a container's port(s) to the host
+15672 is the default port for RabbitMQ GUI, 
+5672 for RabbitMQ message broker.
+安裝後可以網址: http://localhost:15672/, 瀏覽 RabbitMQ 的管理介面.
+登入帳號密碼, 預設均為 guest.
+guest 帳號除非開啟權限, 否則只能以 localhost 連線使用.
+"guest" user can only connect from localhost 
+
+
+$ docker exec [DockerImageName] rabbitmqctl rabbitmq-plugins enable rabbitmq_management | 開啟 RabbitMQ 管理介面.
+
+$ docker exec [DockerImageName] rabbitmqctl status | 檢查 RabbitMQ Docker Image 的狀態.
+例如:
+$ docker exec MassTransit1 rabbitmqctl status
+Status of node rabbit@1979db74238c ...
+Runtime
+
+OS PID: 15
+OS: Linux
+Uptime (seconds): 1072
+Is under maintenance?: false
+RabbitMQ version: 3.10.5
+Node name: rabbit@1979db74238c
+Erlang configuration: Erlang/OTP 24 [erts-12.3.2.2] [source] [64-bit] [smp:8:8] [ds:8:8:10] [async-threads:1] [jit:no-native-stack]
+Crypto library: OpenSSL 1.1.1p  21 Jun 2022
+Erlang processes: 412 used, 1048576 limit
+Scheduler run queue: 1
+Cluster heartbeat timeout (net_ticktime): 60
+
+Plugins
+
+Enabled plugin file: /etc/rabbitmq/enabled_plugins
+Enabled plugins:
+
+ * rabbitmq_prometheus
+ * rabbitmq_shovel_management
+ * rabbitmq_shovel
+ * amqp10_client
+ * prometheus
+ * rabbitmq_delayed_message_exchange
+ * rabbitmq_consistent_hash_exchange
+ * accept
+ * rabbitmq_management
+ * amqp_client
+ * rabbitmq_web_dispatch
+ * cowboy
+ * cowlib
+ * rabbitmq_management_agent
+
+Data directory
+
+Node data directory: /var/lib/rabbitmq/mnesia/rabbit@1979db74238c
+Raft data directory: /var/lib/rabbitmq/mnesia/rabbit@1979db74238c/quorum/rabbit@1979db74238c
+
+Config files
+
+ * /etc/rabbitmq/conf.d/10-defaults.conf
+
+Log file(s)
+
+ * /var/log/rabbitmq/rabbit@1979db74238c_upgrade.log
+ * <stdout>
+
+Alarms
+
+(none)
+
+Memory
+
+Total memory used: 0.1593 gb
+Calculation strategy: rss
+Memory high watermark setting: 0.4 of available memory, computed to: 3.267 gb
+
+reserved_unallocated: 0.0852 gb (53.5 %)
+code: 0.0394 gb (24.74 %)
+other_system: 0.0284 gb (17.82 %)
+other_proc: 0.0191 gb (11.98 %)
+other_ets: 0.0033 gb (2.09 %)
+atom: 0.0015 gb (0.92 %)
+plugins: 0.0014 gb (0.9 %)
+metrics: 2.0e-4 gb (0.15 %)
+mgmt_db: 2.0e-4 gb (0.13 %)
+mnesia: 1.0e-4 gb (0.06 %)
+binary: 1.0e-4 gb (0.05 %)
+msg_index: 0.0 gb (0.02 %)
+quorum_ets: 0.0 gb (0.01 %)
+connection_other: 0.0 gb (0.0 %)
+quorum_queue_dlx_procs: 0.0 gb (0.0 %)
+stream_queue_procs: 0.0 gb (0.0 %)
+stream_queue_replica_reader_procs: 0.0 gb (0.0 %)
+allocated_unused: 0.0 gb (0.0 %)
+connection_channels: 0.0 gb (0.0 %)
+connection_readers: 0.0 gb (0.0 %)
+connection_writers: 0.0 gb (0.0 %)
+queue_procs: 0.0 gb (0.0 %)
+queue_slave_procs: 0.0 gb (0.0 %)
+quorum_queue_procs: 0.0 gb (0.0 %)
+stream_queue_coordinator_procs: 0.0 gb (0.0 %)
+
+File Descriptors
+
+Total: 2, limit: 1048479
+Sockets: 0, limit: 943629
+
+Free Disk Space
+
+Low free disk space watermark: 0.05 gb
+Free disk space: 253.7747 gb
+
+Totals
+
+Connection count: 0
+Queue count: 0
+Virtual host count: 1
+
+Listeners
+
+Interface: [::], port: 15672, protocol: http, purpose: HTTP API
+Interface: [::], port: 15692, protocol: http/prometheus, purpose: Prometheus exporter API over HTTP
+Interface: [::], port: 25672, protocol: clustering, purpose: inter-node and CLI tool communication
+Interface: [::], port: 5672, protocol: amqp, purpose: AMQP 0-9-1 and AMQP 1.0
+
+
+#### 相關指令
 $ dotnet --list-sdks
 6.0.405 [C:\Program Files\dotnet\sdk]
 7.0.102 [C:\Program Files\dotnet\sdk]
 
-○ 安裝並執行由 MassTransit 維護的 RabbitMQ Docker. 
-Docker 已經設定好 delayed exchange plug-in 和管理介面.
-Get RabbitMQ up and running
-This is running the preconfigured Docker image maintained by the MassTransit team (opens new window). 
-It includes the delayed exchange plug-in, as well as the Management interface enabled.
-$ docker run -p 15672:15672 -p 5672:5672 masstransit/rabbitmq
 
-若是 ARM platform, 則指令為:
-$ docker run --platform linux/arm64 -p 15672:15672 -p 5672:5672 masstransit/rabbitmq
+#### **** 以下確認後移到上面
+□ 原始碼:
+○ .NET 6 .NETCore
+  官網提供的 Sample code (in-memory transport 和 RabbitMQ) 為 Version 8 的 .NETCore 原始碼 
+  開發時需要 .NET 6 SDK, 執行時需要 .NET 6.0 以上.
+  Service 端建議使用這個版本, .NETCore 程式可以移植到不同的平台, 別再留戀舊版本.
 
-注意:
-1. 若未加參數 --name, 則每次執行就會新增一個新的(自動命名)的 container.
-   因此可改指令為 
-$ docker run -p 15672:15672 -p 5672:5672 --name mass1 masstransit/rabbitmq 
+○ .NET 4.x 
+ref: https://github.com/andras-nemes/messaging-with-mass-transit-introduction
+或 https://github.com/github-honda/MassTransitPratice/blob/main/Net48/messaging-with-mass-transit-introduction-master.zip
 
-2. 15672 is the default port for RabbitMQ GUI, 
-3. 5672 for RabbitMQ message broker.
+○ .NET 4.8
+https://github.com/SpocWeb/RabbitMqConsumer.Cli
 
-○ 測試登入 rabbitmq broker
-安裝成功後, 可瀏覽網頁到 http://localhost:15672 測試登入.
-登入帳號guest, 密碼guest, 這組預設帳密只能在本機 localhost 使用.
+本文的原始碼版本.
+由於 MassTransit 歷史悠久, 版本太多, 各版本教學介紹的廢話也太多 XD..., 
+若將錯誤版本的原始碼, 執行在不正確的環境上, 只會狀況百出!
+筆者決定直接將(本文原始碼與官網最新的原始碼程式庫)結合, 避免踩雷, 省掉確認不同版本支援程度的驗證時間.
+---> 感謝 GitHub !!!
 
-○ 撰寫測試程式
-後面這段, 可直接使用筆者的原始檔比較快.
-官網上的 Quick
+本文的原始碼與官網的原始碼程式庫:
+◇ 
 
-
-Change the Transport to RabbitMQ
-Add the MassTransit.RabbitMQ package to the project.
-
-$ dotnet add package MassTransit.RabbitMQ
-#Edit Program.cs
-Change UsingInMemory to UsingRabbitMq
-
-public static IHostBuilder CreateHostBuilder(string[] args) =>
-    Host.CreateDefaultBuilder(args)
-        .ConfigureServices((hostContext, services) =>
-        {
-            services.AddMassTransit(x =>
-            {
-                // elided...
-
-                x.UsingRabbitMq((context,cfg) =>
-                {
-                    cfg.Host("localhost", "/", h => {
-                        h.Username("guest");
-                        h.Password("guest");
-                    });
-
-                    cfg.ConfigureEndpoints(context);
-                });
-            });
-
-            services.AddHostedService<Worker>();
-        });
-localhost is where the docker image is running. We are inferring the default port of 5672 and are using \ as the virtual host (opens new window). guest and guest are the default username and password to talk to the cluster and management dashboard (opens new window).
-
-#Run the project
-$ dotnet run
-The output should have changed to show the message consumer generating the output (again, press Control+C to exit). Notice that the bus address now starts with rabbitmq.
-
-Building...
-info: MassTransit[0]
-      Configured endpoint Message, Consumer: GettingStarted.MessageConsumer
-info: Microsoft.Hosting.Lifetime[0]
-      Application started. Press Ctrl+C to shut down.
-info: Microsoft.Hosting.Lifetime[0]
-      Hosting environment: Development
-info: Microsoft.Hosting.Lifetime[0]
-      Content root path: /Users/chris/Garbage/start/GettingStarted
-info: MassTransit[0]
-      Bus started: rabbitmq://localhost/
-info: GettingStarted.MessageConsumer[0]
-      Received Text: The time is 3/24/2021 12:11:10 PM -05:00
-At this point the service is connecting to RabbbitMQ on localhost and publishing messages which are received by the consumer.
+目錄 Net48 將 .NET 4.x 的版本, 轉為 .NET 4.8, 並可搭配使用於(官網的.NET 6.測試環境) 
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48
 
 
-?????
+
+RabbitMq Docker Command:
+docker pull rabbitmq:3-management
+docker run --rm -d -p 15672:15672 -p 5672:5672 --name my_rabbit rabbitmq:3-management
+docker stop my_rabbit
+
 
 The output should have changed to show the message consumer generating the output (again, press Control+C to exit).
-
-
-以下確認後移到上面
 https://masstransit-project.com/getting-started/
 
 □ 安裝
@@ -419,7 +503,7 @@ Serialization is the next biggest benefit, since that can be painful to figure o
 Those are a few, you can check out the documentation for more information, or give the really old .NET Rocks! podcast a listen for some related content by yours truly.
 
 
-#### 2023-01-18, rabbitmq-with-docker-on-windows-in-30-minutes
+2023-01-18, rabbitmq-with-docker-on-windows-in-30-minutes
 以下為
 https://code.imaginesoftware.it/rabbitmq-with-docker-on-windows-in-30-minutes-172e88bb0808
 的文字節錄: (包含C#測試程式)
@@ -540,8 +624,7 @@ I don’t have the experience to say how Docker is on production environments, b
 
 
 
-#### 2023-01-18, 以下舊資料確認後移到上方.
-
+2023-01-18
     https://github.com/dprothero/MtPubSubExample
 	https://masstransit-project.com/usage/transports/
 	https://masstransit-project.com/usage/transports/rabbitmq.html#minimal-example
