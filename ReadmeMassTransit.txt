@@ -1,8 +1,7 @@
 From: 011netservice@gmail.com
-Date: 2023-02-13
+Date: 2023-02-17
 Subject: MassTransit with RabbitMQ
 File: https://github.com/github-honda/MassTransitPratice/blob/main/ReadmeMassTransit.txt
-      CodeHelper\cs\MessageQueue\MassTransit\ReadmeMassTransit.txt
 
 歡迎來信交流, 訂購軟體需求.
 
@@ -10,10 +9,15 @@ MassTransit:
   https://masstransit.io/
   https://masstransit-project.com/
   https://github.com/MassTransit/MassTransit
+
+  2016完整目錄, Visual Studio 2015, 範例為 .Net Framework, 非.NETCore:
+  https://dotnetcodr.com/messaging/  
   
 RabbitMQ: 
   https://www.rabbitmq.com/
-
+  
+  
+#### .NETCore 範例
 建議初學者先了解 (In Memory) 和 (RabbitMQ) 2個 Getting Started, 執行環境必須為 .NET 6.0 以上.
 
 □ GettingStarted-InMemory 
@@ -103,8 +107,64 @@ https://github.com/github-honda/MassTransitPratice/tree/main/GettingStarted-Rabb
 $ dotnet run
 
 
-#### 安裝 MassTransit1 (由 MassTransit 維護的 RabbitMQ Docker, 適用於 RabbitMQ with .NET 6, MassTransit 8.0 Samples) 
-□ 安裝 RabbitMQ Docker, 包括需要的 Plugins
+#### .Net Framework 範例.
+這是 2016-08-05, .Net Framework 的範例.
+https://dotnetcodr.com/messaging/ 
+??? E:\CodeHelper\cs\MessageQueue\MassTransit\Net48\2016Lab 
+
+請先讀前2篇, 並照著內容設定:
+□ Part 1. 基本概念
+Messaging with RabbitMQ and .NET review part 1: foundations and terminology
+https://dotnetcodr.com/2016/08/02/messaging-with-rabbitmq-and-net-review-part-1-foundations-and-terminology/
+
+□ Part 2. RabbitMQ 安裝與設定
+Messaging with RabbitMQ and .NET review part 2: installation and setup
+https://dotnetcodr.com/2016/08/03/messaging-with-rabbitmq-and-net-review-part-2-installation-and-setup/
+原範例是安裝 RabbitMQ 到主 Host, 再設定一些配合範例程式執行的 RabbitMQ 參數.
+筆者改成安裝為 RabbitMQ Docker後, 在設定同樣的參數如下:
+○ 安裝 RabbitMQ Docker
+請先參考( #### 安裝 MassTransit1 RabbitMQ Docker), 安裝 RabbitMQ Docker, 不要安裝 RabbitMQ 到主 Host.
+
+○ 設定 RabbitMQ 參數
+安裝 RabbitMQ Docker 後, 啟動執行.
+再以瀏覽器連線到 http://localhost:15672, 以帳號 guest, 密碼 guest 登入.
+
+△ 設定 Virtual Hosts
+在 RabbitMQ 管理介面網頁上, 選擇 Admin.Virtual Hosts.Add virtual host 如下:
+Name: accounting
+Description: 空白
+Tags: 空白
+
+△ Add Users
+在 RabbitMQ 管理介面網頁上, 選擇 Admin.Users.Add Users 如下:
+Username: accountant
+Password: accountant
+Confirm:  accountant
+Tags: administrator (若非 predefined roles, 則無法登入管理介面).
+
+
+△ 授權 Virtual Host 給 User
+在 RabbitMQ 管理介面網頁上, 選擇 Admin.Users, 在使用者清單中選擇使用者, 例如 accountant.
+在 Set Permission 區段中, 填入:
+Virtual Host: 選擇 accounting 
+Configure regexp: .*
+Write regexp: .*
+Read regexp: .*
+按下 Set Permission 按鍵後, 可看到新增授權在上方 Current permissions 清單中.
+
+□ Part 3. 示範 Open Channel 和 Publishing message.
+Messaging with RabbitMQ and .NET review part 3: the .NET client and some initial code
+https://dotnetcodr.com/2016/08/05/messaging-with-rabbitmq-and-net-review-part-3-the-net-client-and-some-initial-code/
+示範以下實作:
+1. 偵測可否連線.
+2. 建立 RabbitMQ Channel.
+3. 經由 Channel 發布訊息.
+原始碼: ??? E:\CodeHelper\cs\MessageQueue\MassTransit\Net48\2016Lab 
+
+
+#### 安裝 MassTransit1 RabbitMQ Docker
+□ 安裝 RabbitMQ Docker
+這是由 MassTransit 維護的 RabbitMQ Docker, 包括管理介面以及其他 plug-in.
 Run RabbitMQ
 This is running the preconfigured Docker image maintained by the MassTransit team (opens new window). 
 The container image includes the delayed exchange plug-in and the Management interface enabled.
@@ -130,47 +190,6 @@ $ docker run --platform linux/arm64 -p 15672:15672 -p 5672:5672 masstransit/rabb
 
 或是用指令測試: 
 docker 必須已經啟動執行中.
-
-
-#### 安裝 MassTransit2 (由 MassTransit 維護的 RabbitMQ Docker, 適用於 RabbitMQ with .NET Framework 4.6.1, MassTransit 舊版 Samples) 
-???? 以下測試中, 待確認:
-
-
-
-以前官網的範例是直接安裝 RabbitMQ 到主 Host, 再設定一些配合範例程式執行的 RabbitMQ 參數.
-筆者改成 1. 安裝 RabbitMQ Docker, 2. 設定 RabbitMQ 參數
-ref:
-https://dotnetcodr.com/2016/08/03/messaging-with-rabbitmq-and-net-review-part-2-installation-and-setup/
-
-□ 1. 安裝 RabbitMQ Docker
-請先參考(安裝 MassTransit1), 安裝 RabbitMQ Docker, 不要安裝 RabbitMQ 到主 Host.
-
-□ 2. 設定 RabbitMQ 參數
-安裝 RabbitMQ Docker 後, 啟動執行.
-再以瀏覽器連線到 http://localhost:15672, 以帳號 guest, 密碼 guest 登入.
-
-○ 設定 Virtual Hosts
-在 RabbitMQ 管理介面網頁上, 選擇 Admin.Virtual Hosts.Add virtual host 如下:
-Name: accounting
-Description: 空白
-Tags: 空白
-
-□ Add Users
-在 RabbitMQ 管理介面網頁上, 選擇 Admin.Users.Add Users 如下:
-Username: accountant
-Password: accountant
-Confirm:  accountant
-Tags: administrator (若非 predefined roles, 則無法登入管理介面).
-
-
-□ 授權 Virtual Host 給 User
-在 RabbitMQ 管理介面網頁上, 選擇 Admin.Users, 在使用者清單中選擇使用者, 例如 accountant.
-在 Permissions 區段中, 填入:
-Virtual Host: 選擇 accounting 
-Configure regexp: .*
-Write regexp: .*
-Read regexp: .*
-按下 Set Permission 按鍵後, 可看到新增授權在 Current permissions 清單中.
 
 
 #### RabbitMQ Docker 常用指令
@@ -313,8 +332,9 @@ $ dotnet --list-sdks
   Service 端建議使用這個版本, .NETCore 程式可以移植到不同的平台, 別再留戀舊版本.
 
 ○ .NET 4.x 
-ref: https://github.com/andras-nemes/messaging-with-mass-transit-introduction
-或 https://github.com/github-honda/MassTransitPratice/blob/main/Net48/messaging-with-mass-transit-introduction-master.zip
+ref: 
+https://github.com/andras-nemes/messaging-with-mass-transit-introduction
+https://github.com/github-honda/MassTransitPratice/blob/main/NET461/messaging-with-mass-transit-introduction-master.zip
 
 ○ .NET 4.8
 https://github.com/SpocWeb/RabbitMqConsumer.Cli

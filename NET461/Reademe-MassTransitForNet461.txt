@@ -1,2 +1,19 @@
+2023-02-17
+這是 2016, Visual Studio 2015, .Net Framework, 不是 .NETCore 的範例.
+ref:  
+https://dotnetcodr.com/messaging/  
+https://github.com/andras-nemes/messaging-with-mass-transit-introduction
+https://github.com/github-honda/MassTransitPratice/blob/main/NET461/messaging-with-mass-transit-introduction-master.zip
+
 2023-02-10
+MassTransit.Net
 https://github.com/agubran/MassTransit.Net
+    public static class RabbitMqConstants
+    {
+        public const string RabbitMqUri = "rabbitmq://localhost/Test/";
+        public const string UserName = "guest";
+        public const string Password = "guest";
+
+        public const string NotificationServiceQueue = "NotificationQueue";
+    }
+	
