@@ -10,8 +10,10 @@ MassTransit:
   https://masstransit-project.com/
   https://github.com/MassTransit/MassTransit
 
-  2016完整目錄, Visual Studio 2015, 範例為 .Net Framework, 非.NETCore:
-  https://dotnetcodr.com/messaging/  
+  2016-08 版本 .Net Framework 的範例:
+  https://dotnetcodr.com/messaging/
+    原始碼: 
+	https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016  
   
 RabbitMQ: 
   https://www.rabbitmq.com/
@@ -108,9 +110,11 @@ $ dotnet run
 
 
 #### .Net Framework 範例.
-這是 2016-08-05, .Net Framework 的範例.
+這是 2016-08, .Net Framework 的範例.
 https://dotnetcodr.com/messaging/ 
-??? E:\CodeHelper\cs\MessageQueue\MassTransit\Net48\2016Lab 
+
+原始碼: 
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016  
 
 請先讀前2篇, 並照著內容設定:
 □ Part 1. 基本概念
@@ -159,7 +163,8 @@ https://dotnetcodr.com/2016/08/05/messaging-with-rabbitmq-and-net-review-part-3-
 1. 偵測可否連線.
 2. 建立 RabbitMQ Channel.
 3. 經由 Channel 發布訊息.
-原始碼: ??? E:\CodeHelper\cs\MessageQueue\MassTransit\Net48\2016Lab 
+原始碼: 
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/RabbitMQClient1 
 
 
 #### 安裝 MassTransit1 RabbitMQ Docker
