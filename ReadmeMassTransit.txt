@@ -157,14 +157,26 @@ Read regexp: .*
 按下 Set Permission 按鍵後, 可看到新增授權在上方 Current permissions 清單中.
 
 □ Part 3. 示範 Open Channel 和 Publishing message.
-Messaging with RabbitMQ and .NET review part 3: the .NET client and some initial code
-https://dotnetcodr.com/2016/08/05/messaging-with-rabbitmq-and-net-review-part-3-the-net-client-and-some-initial-code/
 示範以下實作:
 1. 偵測可否連線.
 2. 建立 RabbitMQ Channel.
+2.1 Durable: Message 會持續保留在 RabbitMQ 中, 即使關機後重新開啟, 仍會存留訊息.
 3. 經由 Channel 發布訊息.
+
+Messaging with RabbitMQ and .NET review part 3: the .NET client and some initial code
+https://dotnetcodr.com/2016/08/05/messaging-with-rabbitmq-and-net-review-part-3-the-net-client-and-some-initial-code/
 原始碼: 
 https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/RabbitMQClient1 
+
+執行成功的話, 瀏覽 http://localhost:15672, 可以看到
+1. Queues 底下多了一列資料: Virtual host=accounting, Name=my.first.queue.
+1.1 在這列資料的後面 Messages.Total 可以看到已接收的訊息數.
+1.1.1 點選 (my.first.queue).Get messages 可以檢視訊息內容.
+2. Exchanges.Bindings 多了一列資料: To=my.first.queue. 
+
+□ Part 3. 示範 Open Channel 和 Publishing message.
+Messaging with RabbitMQ and .NET review part 4: one way messaging with a basic consumer
+https://dotnetcodr.com/2016/08/08/messaging-with-rabbitmq-and-net-review-part-4-one-way-messaging-with-a-basic-consumer/
 
 
 #### 安裝 MassTransit1 RabbitMQ Docker
