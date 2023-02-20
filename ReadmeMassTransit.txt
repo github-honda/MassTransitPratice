@@ -185,6 +185,14 @@ https://dotnetcodr.com/2016/08/08/messaging-with-rabbitmq-and-net-review-part-4-
 https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/ReceiverOneWayMessage
 
 
+□ Part 5. Receiver1Event
+Messaging with RabbitMQ and .NET review part 5: one way messaging with an event based consumer
+https://dotnetcodr.com/2016/08/10/messaging-with-rabbitmq-and-net-review-part-5-one-way-messaging-with-an-event-based-consumer/
+示範將(Part 4. Receiver1)改為訊息通知
+原始碼: 
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Receiver1Event
+
+
 #### 安裝 MassTransit1 RabbitMQ Docker
 □ 安裝 RabbitMQ Docker
 這是由 MassTransit 維護的 RabbitMQ Docker, 包括管理介面以及其他 plug-in.
