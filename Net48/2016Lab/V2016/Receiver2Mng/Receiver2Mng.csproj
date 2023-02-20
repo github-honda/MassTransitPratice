@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6E4C5870-EA2B-4AB1-AF72-332CE8889E29}</ProjectGuid>
+    <ProjectGuid>{6B575823-F2E9-4BA4-95A8-164E85765A0E}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>ReceiverOneWayMessage</RootNamespace>
-    <AssemblyName>ReceiverOneWayMessage</AssemblyName>
+    <RootNamespace>Receiver2Mng</RootNamespace>
+    <AssemblyName>Receiver2Mng</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -45,7 +45,6 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="MyReceive1.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

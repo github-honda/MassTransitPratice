@@ -15,6 +15,8 @@ namespace RabbitMQClient1
         {
             MyIsOpenConnection();
             MyOpenChannel();
+            Console.WriteLine("Main done...");
+            Console.ReadKey();
         }
 
         /// <summary>
@@ -51,7 +53,7 @@ The same dictionary object with custom options as in ExchangeDeclare            
             channel.QueueDeclare(sQueueName, bDurable, bExclusive, bAutoDeleted, null);
             channel.QueueBind(sQueueName, sExchange, "");
 
-            MyPublishing(channel);
+            MyPublishing(channel, sExchange);
 
             channel.Close();
             connection.Close();
@@ -61,17 +63,13 @@ The same dictionary object with custom options as in ExchangeDeclare            
             Console.ReadKey();
         }
 
-        /// <summary>
-        /// Test publishing message with channel
-        /// </summary>
-        /// <param name="channel"></param>
-        static void MyPublishing(IModel channel)
+        static void MyPublishing(IModel channel, string sExchangeName)
         {
             IBasicProperties properties = channel.CreateBasicProperties();
             properties.Persistent = true;
             properties.ContentType = "text/plain";
-            string sMsg = $"Message from RabbitMQClient1 {DateTime.Now.ToString("o")}";
-            PublicationAddress address = new PublicationAddress(ExchangeType.Direct, "my.first.exchange", "");
+            string sMsg = $"Message from Publisher1 {DateTime.Now:o}";
+            PublicationAddress address = new PublicationAddress(ExchangeType.Direct, sExchangeName, "");
             channel.BasicPublish(address, properties, Encoding.UTF8.GetBytes(sMsg));
             Console.WriteLine($"Publishing: {sMsg}");
         }

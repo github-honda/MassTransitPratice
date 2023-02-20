@@ -9,10 +9,10 @@ using RabbitMQ.Client;
 
 namespace ReceiverOneWayMessage
 {
-    public class ReceiverOneWayMessage : DefaultBasicConsumer
+    public class MyReceive1 : DefaultBasicConsumer
     {
         readonly IModel _channel;
-        public ReceiverOneWayMessage(IModel model) 
+        public MyReceive1(IModel model) 
             : base(model)
         {
             _channel = model;
