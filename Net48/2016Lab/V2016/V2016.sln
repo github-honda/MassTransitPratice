@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Publisher1", "RabbitMQClien
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Receiver1", "ReceiverOneWayMessage\Receiver1.csproj", "{6E4C5870-EA2B-4AB1-AF72-332CE8889E29}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Receiver1Event", "Receiver1Event\Receiver1Event.csproj", "{7DB34168-42DB-4B10-A4B3-E7B7D1151C18}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{6E4C5870-EA2B-4AB1-AF72-332CE8889E29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E4C5870-EA2B-4AB1-AF72-332CE8889E29}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E4C5870-EA2B-4AB1-AF72-332CE8889E29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DB34168-42DB-4B10-A4B3-E7B7D1151C18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DB34168-42DB-4B10-A4B3-E7B7D1151C18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DB34168-42DB-4B10-A4B3-E7B7D1151C18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DB34168-42DB-4B10-A4B3-E7B7D1151C18}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

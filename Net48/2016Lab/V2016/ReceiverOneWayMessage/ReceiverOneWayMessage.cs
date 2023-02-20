@@ -25,10 +25,11 @@ namespace ReceiverOneWayMessage
 sample output:             
 Message received from the exchange my.first.exchange
 Content type: text/plain
-Consumer tag: amq.ctag-sr_eLwVpAv8N75fUMfAscA
+Consumer tag: amq.ctag-mVsEca6C9pBTjPci-kuj-A
 Delivery tag: 1
-Message: This is a message from the RabbitMq .NET driver     
-redelivered: true
+The thread 0xdde8 has exited with code 0 (0x0).
+Message: Message from RabbitMQClient1 2023-02-20T13:47:39.8159446+08:00
+redelivered: False
              */
             Console.WriteLine("Message received by the consumer. Check the debug window for details.");
             Debug.WriteLine(string.Concat("Message received from the exchange ", exchange));
