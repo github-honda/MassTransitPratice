@@ -19,6 +19,8 @@ namespace Receiver2Mng
 
         private static void ReceiveFanoutMessages()
         {
+            // ref: https://dotnetcodr.com/2016/08/15/messaging-with-rabbitmq-and-net-review-part-6-the-fanout-exchange-type/
+
             ConnectionFactory connectionFactory = new ConnectionFactory();
 
             connectionFactory.Port = 5672;
@@ -43,7 +45,9 @@ namespace Receiver2Mng
                 string message = Encoding.UTF8.GetString(basicDeliveryEventArgs.Body.ToArray());
                 Debug.WriteLine(string.Concat("Message: ", Encoding.UTF8.GetString(basicDeliveryEventArgs.Body.ToArray())));
                 Console.WriteLine(string.Concat("Message received by the management consumer: ", message));
-                channel.BasicAck(basicDeliveryEventArgs.DeliveryTag, false);
+
+                bool bMultiple = false;
+                channel.BasicAck(basicDeliveryEventArgs.DeliveryTag, bMultiple);
             };
 
             channel.BasicConsume("mycompany.queues.management", false, eventingBasicConsumer);

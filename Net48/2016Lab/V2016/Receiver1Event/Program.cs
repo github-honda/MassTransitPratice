@@ -85,7 +85,8 @@ redelivered: False
             Debug.WriteLine(string.Concat("Delivery tag: ", e.DeliveryTag));
             Debug.WriteLine(string.Concat("Message: ", Encoding.UTF8.GetString(e.Body.ToArray())));
             Debug.WriteLine(string.Concat("redelivered: ", e.Redelivered)); // Should be true if the message has been viewed in the RabbmitMQ management GUI before.
-            channelForEventing.BasicAck(e.DeliveryTag, false);
+            bool bMultiple = false;
+            channelForEventing.BasicAck(e.DeliveryTag, bMultiple);
         }
     }
 }
