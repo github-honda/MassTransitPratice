@@ -1,5 +1,5 @@
 From: 011netservice@gmail.com
-Date: 2023-02-17
+Date: 2023-02-21
 Subject: MassTransit with RabbitMQ
 File: https://github.com/github-honda/MassTransitPratice/blob/main/ReadmeMassTransit.txt
 
@@ -188,9 +188,59 @@ https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016
 □ Part 5. Receiver1Event
 Messaging with RabbitMQ and .NET review part 5: one way messaging with an event based consumer
 https://dotnetcodr.com/2016/08/10/messaging-with-rabbitmq-and-net-review-part-5-one-way-messaging-with-an-event-based-consumer/
-示範將(Part 4. Receiver1)改為訊息通知
+示範以事件通知接收到訊息: 將(Part 4. Receiver1)改為訊息通知.
 原始碼: 
 https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Receiver1Event
+
+□ Part 6. Fanout exchange
+Messaging with RabbitMQ and .NET review part 6: the fanout exchange type
+https://dotnetcodr.com/2016/08/15/messaging-with-rabbitmq-and-net-review-part-6-the-fanout-exchange-type/
+先前的範例, message exchange patterns (MEPs) 為 
+a. One way messaging
+b. worker queues.
+原始碼: 
+Fanout exchange, 將一個訊息, 同時發佈到多個 queue.
+Fanout exchange can be multiple queues bound to an exchange.
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Publisher2
+
+接收的方式, 跟先前示範的內容幾乎相同, 只是從不同的 queue 來源例如接收訊息.
+原始碼:
+接收 queue= mycompany.queues.accounting
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Receiver2acc
+接收 queue=mycompany.queues.management
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Receiver2Mng
+
+
+□ Part 6. Two-way messsaging
+Messaging with RabbitMQ and .NET review part 7: two way messaging
+https://dotnetcodr.com/2016/08/18/messaging-with-rabbitmq-and-net-review-part-7-two-way-messaging/
+
+Publisher (Two-way messsaging) steps:
+1. Build (ReplyTo queue) and (correlationId) for consumer to response.
+2. Publish message with (ReplyTo queue) and (correlationId).
+3. Waiting response from (ReplyTo queue).
+4. re-publish message with (ReplyTo queue) and (correlationId).
+5. Repeat 3 and 4.
+原始碼:
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Publisher3
+
+Consumer (Two-way messsaging) steps:
+1. Receive message including (ReplyTo queue) and (correlationId).
+2. Acknowledge the message.
+3. Publish response message with (correlationId) to (ReplyTo queue).
+原始碼:
+Response to (ReplyTo) with (CorrelationId).
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Receiver3
+
+Remote procedure calls (RPC)
+RPC is slightly different from the previous MEPs in that there’s a response queue involved. The sender sends an initial message to a destination queue via the default exchange. The message properties include a temporary queue where the consumer can reply. The response queue will be dynamically created by the sender. The receiver processes the message and responds using the response queue extracted from the message properties. The sender then processes the response. In this scenario the publisher will also need a consumer class so that it can process the responses. Both parties will also need to acknowledge the messages they receive. Hence the publisher will acknowledge the response from the sender. It’s important to note that we’ll have two queues: a “normal” durable queue where the publisher can send messages to the receiver and then a temporary one where the receiver can send the response. The receiver will be listening on the fixed queue and the publisher on the temporary one.
+Note that this setup is not mandatory for two way messaging. You can use a dedicated exchange to route the messages. Moreover, the response queue can be a fixed queue. Hence the usage of the default nameless exchange, called the “(AMQP default)” in the management GUI and the temporary response queue are not obligatory. However, it is probably not necessary to have a dedicated exchange for this purpose and it’s good to know how to use default exchange as well. Furthermore, the usage of temporary queues which disappear after all channels using it are closed is also important knowledge.
+We’ve been working with a demo console application in Visual Studio in this series and will continue to do so. We currently have a console project in it that includes all code for the sender. We’ll build upon that to set up the publisher in the RPC scenario.
+遠程過程調用（RPC）
+RPC與先前的MEP略有不同，因為涉及到一個響應隊列。發送者通過默認交換發送初始消息到目的地隊列。消息屬性包括一個臨時隊列，用於接收方回復。響應隊列將由發送者動態創建。接收者處理消息並使用從消息屬性中提取的響應隊列進行回復。然後發送者處理回應。在這種情況下，發布者還需要一個消費者類，以便它可以處理響應。雙方還需要確認接收到的消息。因此，發布者將確認來自發送者的回應。重要的是要注意，我們將擁有兩個隊列：一個“正常”的持久隊列，發布者可以向接收者發送消息，然後是一個臨時隊列，接收者可以發送響應。接收者將在固定隊列上進行監聽，發布者在臨時隊列上進行監聽。
+請注意，此設置對於雙向消息並不是必需的。您可以使用專用交換機來路由消息。此外，響應隊列可以是一個固定的隊列。因此，默認的無名交換機，稱為管理GUI中的“（AMQP默認）”，以及臨時響應隊列的使用並非強制性的。但是，對於此目的，可能不需要專用交換機，了解如何使用默認交換機也是很好的。此外，臨時隊列的使用，這些隊列在所有使用它的通道關閉後會消失，也是重要的知識。
+在這個系列中，我們一直在使用Visual Studio中的演示控制台應用程序，並將繼續使用它。我們目前在其中有一個控制台項目，其中包含發送者的所有代碼。我們將在此基礎上構建，設置RPC場景中的發布者。
+
 
 
 #### 安裝 MassTransit1 RabbitMQ Docker

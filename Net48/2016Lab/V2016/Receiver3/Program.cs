@@ -22,32 +22,31 @@ namespace Receiver3
             connectionFactory.Password = "accountant";
             connectionFactory.VirtualHost = "accounting";
 
+            // 1. Receive message including (ReplyTo queue) and (correlationId).
             IConnection connection = connectionFactory.CreateConnection();
             IModel channel = connection.CreateModel();
-            channel.BasicQos(0, 1, false);
+            uint PprefetchSize = 0;  // 最大訊息筆數. The maximum size of for the messages fetched from the queue. 0=no upper limit.
+            ushort PprefetchCount = 1; // 每次接收訊息筆數. The number of messages to be fetched from queue at a time.
+            bool Pglobal = false; // for the current channel only, not for the entire connection.
+            channel.BasicQos(PprefetchSize, PprefetchCount, Pglobal);
             EventingBasicConsumer eventingBasicConsumer = new EventingBasicConsumer(channel);
-
             eventingBasicConsumer.Received += (sender, basicDeliveryEventArgs) =>
             {
+                // 2. Acknowledge the message.
                 string message = Encoding.UTF8.GetString(basicDeliveryEventArgs.Body.ToArray());
+                Console.WriteLine($"Message: {message}");
                 bool bMultiple = false;
-                // acknowledge the message.
                 channel.BasicAck(basicDeliveryEventArgs.DeliveryTag, bMultiple);
-                
+
+                // 3. Publish response message with (correlationId) to (ReplyTo queue).
                 // Console.WriteLine("Message: {0} {1}", message, " Enter your response: ");
                 //string response = Console.ReadLine();
-                string response = $"Message from Receiver3 {DateTime.Now:o}";
-                Console.WriteLine($"Message: {message}");
-                Console.WriteLine($"Response: {response}");
+                string response = $"Response from Receiver3 {DateTime.Now:o}";
+                Console.WriteLine(response);
                 IBasicProperties replyBasicProperties = channel.CreateBasicProperties();
-
-                // reply the same correlationId from this delivery.
                 replyBasicProperties.CorrelationId = basicDeliveryEventArgs.BasicProperties.CorrelationId;
-                
                 byte[] responseBytes = Encoding.UTF8.GetBytes(response);
                 string sDefaultExchange = ""; // The nameless default AMQP exchange.
-                
-                // publish a response.
                 channel.BasicPublish(sDefaultExchange, 
                     basicDeliveryEventArgs.BasicProperties.ReplyTo, 
                     replyBasicProperties, 

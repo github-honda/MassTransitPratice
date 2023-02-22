@@ -41,31 +41,27 @@ namespace Publisher3
 
         private static void SendRpcMessagesBackAndForth(IModel channel)
         {
-            // Response queue:
+            // 1. Build (ReplyTo queue) and (correlationId) for consumer to response.
             // The name of the temporary queue will be randomly generated, e.g. “amq.gen-3tj4jtzMauwolYqc7CUj9g”.
             // The temporary queue will be available as long as the sender is running. After that it will be removed automatically.
             string rpcResponseQueue = channel.QueueDeclare().QueueName;
-
             string correlationId = Guid.NewGuid().ToString();
             string responseFromConsumer = null;
-
-            // Publishing message with (ResponseQueue and CorrelationId) for consumer to response. 
             IBasicProperties basicProperties = channel.CreateBasicProperties();
             basicProperties.ReplyTo = rpcResponseQueue;
             basicProperties.CorrelationId = correlationId;
 
+            // 2. Publish message with (ReplyTo queue) and (correlationId).
             //Console.WriteLine("Enter your message and press Enter.");
             //string message = Console.ReadLine();
             string message = $"Message 1 from Publisher3 {DateTime.Now:o}";
             Console.WriteLine(message);
-            
             byte[] messageBytes = Encoding.UTF8.GetBytes(message);
             string sRoutingKey = "mycompany.queues.rpc";
             string sDefaultExchange = ""; // The nameless default AMQP exchange.
             channel.BasicPublish(sDefaultExchange, sRoutingKey, basicProperties, messageBytes);
 
-            // (response - (re-publish)) message loop:
-            // also Waiting to receive a response message from consumer.
+            // 3. Waiting response from (ReplyTo queue).
             EventingBasicConsumer rpcEventingBasicConsumer = new EventingBasicConsumer(channel);
             rpcEventingBasicConsumer.Received += (sender, basicDeliveryEventArgs) =>
             {
@@ -79,14 +75,16 @@ namespace Publisher3
                 }
                 bool bMultiple = false;
                 channel.BasicAck(basicDeliveryEventArgs.DeliveryTag, bMultiple);
-                Console.WriteLine("Response: {0}", responseFromConsumer);
+                Console.WriteLine("Consumer response: {0}", responseFromConsumer);
 
-                // re-publishing message
+                // 4. Re-publish message with (ReplyTo queue) and (correlationId).
                 //Console.WriteLine("Enter your message and press Enter.");
                 //message = Console.ReadLine();
-                message = $"Message 2 from Publisher3 {DateTime.Now:o}";
+                message = $"Re-publishing message 2 from Publisher3 {DateTime.Now:o}";
                 messageBytes = Encoding.UTF8.GetBytes(message);
                 channel.BasicPublish(sDefaultExchange, sRoutingKey, basicProperties, messageBytes);
+
+                // 5. Repeat 3 and 4.
             };
 
             bool bAutoAct = false;
