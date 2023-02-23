@@ -1,5 +1,5 @@
 From: 011netservice@gmail.com
-Date: 2023-02-21
+Date: 2023-02-23
 Subject: MassTransit with RabbitMQ
 File: https://github.com/github-honda/MassTransitPratice/blob/main/ReadmeMassTransit.txt
 
@@ -211,11 +211,11 @@ https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016
 https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Receiver2Mng
 
 
-□ Part 6. Two-way messsaging
+□ Part 7. Two-way messsaging
 Messaging with RabbitMQ and .NET review part 7: two way messaging
 https://dotnetcodr.com/2016/08/18/messaging-with-rabbitmq-and-net-review-part-7-two-way-messaging/
 
-Publisher (Two-way messsaging) steps:
+Publisher (Two-way messsaging):
 1. Build (ReplyTo queue) and (correlationId) for consumer to response.
 2. Publish message with (ReplyTo queue) and (correlationId).
 3. Waiting response from (ReplyTo queue).
@@ -224,7 +224,7 @@ Publisher (Two-way messsaging) steps:
 原始碼:
 https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Publisher3
 
-Consumer (Two-way messsaging) steps:
+Consumer (Two-way messsaging):
 1. Receive message including (ReplyTo queue) and (correlationId).
 2. Acknowledge the message.
 3. Publish response message with (correlationId) to (ReplyTo queue).
@@ -241,6 +241,22 @@ RPC與先前的MEP略有不同，因為涉及到一個響應隊列。發送者�
 請注意，此設置對於雙向消息並不是必需的。您可以使用專用交換機來路由消息。此外，響應隊列可以是一個固定的隊列。因此，默認的無名交換機，稱為管理GUI中的“（AMQP默認）”，以及臨時響應隊列的使用並非強制性的。但是，對於此目的，可能不需要專用交換機，了解如何使用默認交換機也是很好的。此外，臨時隊列的使用，這些隊列在所有使用它的通道關閉後會消失，也是重要的知識。
 在這個系列中，我們一直在使用Visual Studio中的演示控制台應用程序，並將繼續使用它。我們目前在其中有一個控制台項目，其中包含發送者的所有代碼。我們將在此基礎上構建，設置RPC場景中的發布者。
 
+□ Part 8. Routing key and Topics
+Messaging with RabbitMQ and .NET review part 8: routing and topics
+https://dotnetcodr.com/2016/08/25/messaging-with-rabbitmq-and-net-review-part-8-routing-and-topics/
+
+Queue 可以綁定為不同的(Exchange + Routing Keys)訊息存放位置.
+因此接收一個 queue 的訊息時, 就可以接收來自不同 (Exchange + Routing Keys) 的訊息來源.
+The same queue can be bound to an exchange with multiple routing keys. 
+i.e., consumer may receive messages from a queue with different binds (exchanges and routing keys).
+
+Publisher (Routing key):
+原始碼:
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Publisher4Routing
+
+Consumer (Routing key):
+原始碼:
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Receiver4Routing
 
 
 #### 安裝 MassTransit1 RabbitMQ Docker
