@@ -20,7 +20,7 @@ RabbitMQ:
   
   
 #### .NETCore 範例
-建議初學者先了解 (In Memory) 和 (RabbitMQ) 2個 Getting Started, 執行環境必須為 .NET 6.0 以上.
+初學者先了解 (In Memory) 和 (RabbitMQ) 2個 Getting Started, 執行環境必須為 .NET 6.0 以上.
 
 □ GettingStarted-InMemory 
 https://masstransit.io/quick-starts/in-memory
@@ -245,16 +245,44 @@ RPC與先前的MEP略有不同，因為涉及到一個響應隊列。發送者�
 Messaging with RabbitMQ and .NET review part 8: routing and topics
 https://dotnetcodr.com/2016/08/25/messaging-with-rabbitmq-and-net-review-part-8-routing-and-topics/
 
-Queue 可以綁定為不同的(Exchange + Routing Keys)訊息存放位置.
+○ Routing Key:
+ExchangeDeclare = ExchangeType.Direct
+	channel.ExchangeDeclare(sExchange, ExchangeType.Direct, true, false, null);
+
+Queue 可以 Bind 綁定為不同的(Exchange + Routing Keys)訊息存放位置.
 因此接收一個 queue 的訊息時, 就可以接收來自不同 (Exchange + Routing Keys) 的訊息來源.
 The same queue can be bound to an exchange with multiple routing keys. 
 i.e., consumer may receive messages from a queue with different binds (exchanges and routing keys).
 
-Publisher (Routing key):
+◇ Publisher (Routing key):
 原始碼:
 https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Publisher4Routing
 
-Consumer (Routing key):
+◇ Consumer (Routing key):
+原始碼:
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Receiver4Routing
+
+○ Topics:
+ExchangeDeclare = ExchangeType.Topic
+	channel.ExchangeDeclare(sExchange, ExchangeType.Topic, true, false, null);
+
+Queue 可以 Bind 綁定為不同的(Exchange + Topics)訊息存放位置.
+因此接收一個 queue 的訊息時, 就可以接收來自不同 (Exchange + Topics) 的訊息來源.
+Topic 還可以特殊字元 ‘*’, ‘#’, 過濾符合條件的主題, 例如:
+"*.world" = 以 world 結束的2個單字, 以句點分隔.
+"world.#" = 以 world 開始的多個單字, 以句點分隔. 
+The same queue can be bound to an exchange with multiple Topics. 
+i.e., consumer may receive messages from a queue with different binds (exchanges and Topics).
+Topics can include special characters as a expression to match:
+‘*’ to replace one word
+‘#’ to replace 0 or more words
+
+
+◇ Publisher (Topics):
+原始碼:
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Publisher4Routing
+
+◇ Consumer (Topics):
 原始碼:
 https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Receiver4Routing
 

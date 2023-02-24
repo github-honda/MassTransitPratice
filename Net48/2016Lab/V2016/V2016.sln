@@ -23,6 +23,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Publisher4Routing", "Publis
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Receiver4Routing", "Receiver4Routing\Receiver4Routing.csproj", "{906A11FA-65EE-4613-B024-700752C2B7D2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Publisher5Topics", "Publisher5Topics\Publisher5Topics.csproj", "{B6B5E42B-B5C4-46B4-8EF4-DF180F52A91D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Receiver5Topics", "Receiver5Topics\Receiver5Topics.csproj", "{041B4331-079F-4717-AB42-BC22F4D19CD6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +73,14 @@ Global
 		{906A11FA-65EE-4613-B024-700752C2B7D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{906A11FA-65EE-4613-B024-700752C2B7D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{906A11FA-65EE-4613-B024-700752C2B7D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6B5E42B-B5C4-46B4-8EF4-DF180F52A91D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6B5E42B-B5C4-46B4-8EF4-DF180F52A91D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6B5E42B-B5C4-46B4-8EF4-DF180F52A91D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6B5E42B-B5C4-46B4-8EF4-DF180F52A91D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{041B4331-079F-4717-AB42-BC22F4D19CD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{041B4331-079F-4717-AB42-BC22F4D19CD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{041B4331-079F-4717-AB42-BC22F4D19CD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{041B4331-079F-4717-AB42-BC22F4D19CD6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

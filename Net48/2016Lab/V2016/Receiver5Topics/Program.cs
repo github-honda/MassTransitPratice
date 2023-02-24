@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-namespace Receiver4Routing
+namespace Receiver5Topics
 {
     internal class Program
     {
@@ -19,6 +19,7 @@ namespace Receiver4Routing
         private static void ReceiveMessagesWithEvents()
         {
             // ref: https://dotnetcodr.com/2016/08/25/messaging-with-rabbitmq-and-net-review-part-8-routing-and-topics/
+
             ConnectionFactory connectionFactory = new ConnectionFactory();
 
             connectionFactory.Port = 5672;
@@ -34,8 +35,6 @@ namespace Receiver4Routing
 
             eventingBasicConsumer.Received += (sender, basicDeliveryEventArgs) =>
             {
-                // The same queue can be bound to an exchange with multiple routing keys. 
-                // i.e., consumer may receive messages from a queue with different binds (exchanges and routing keys).
                 IBasicProperties basicProperties = basicDeliveryEventArgs.BasicProperties;
                 Console.WriteLine("Message received by the event based consumer. Check the debug window for details.");
                 Debug.WriteLine(string.Concat("Message received from the exchange ", basicDeliveryEventArgs.Exchange));
@@ -44,19 +43,19 @@ namespace Receiver4Routing
                 channel.BasicAck(basicDeliveryEventArgs.DeliveryTag, false);
             };
 
-            channel.BasicConsume("company.exchange.queue", false, eventingBasicConsumer);
+            channel.BasicConsume("company.queue.topic", false, eventingBasicConsumer);
             /*
-                Output:
+Output:
 The consumer received the following 2 messages:
-                Message received from the exchange company.exchange.routing
-                Routing key: asia
-                Message: The latest news from Asia!
-                Message received from the exchange company.exchange.routing
-                Routing key: europe
-                Message: The latest news from Europe!
-                Message received from the exchange company.exchange.routing
-                Routing key: americas
-                Message: The latest news from the Americas!             
+Message received from the exchange company.exchange.topic
+Routing key: world.news.and.more
+Message: It’s Friday night
+Message received from the exchange company.exchange.topic
+Routing key: beautiful.world
+Message: The world is beautiful
+
+The other 4 were discarded as their routing key patterns didn’t match any of the queues.
+
              */
         }
     }

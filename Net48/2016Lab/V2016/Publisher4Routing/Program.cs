@@ -18,6 +18,8 @@ namespace Publisher4Routing
         }
         private static void SetUpDirectExchangeWithRoutingKey()
         {
+            // ref: https://dotnetcodr.com/2016/08/25/messaging-with-rabbitmq-and-net-review-part-8-routing-and-topics/
+
             ConnectionFactory connectionFactory = new ConnectionFactory();
 
             connectionFactory.Port = 5672;
@@ -61,6 +63,20 @@ namespace Publisher4Routing
 
             channel.Close();
             connection.Close();
+            /*
+                Output:
+The consumer received the following 2 messages:
+                Message received from the exchange company.exchange.routing
+                Routing key: asia
+                Message: The latest news from Asia!
+                Message received from the exchange company.exchange.routing
+                Routing key: europe
+                Message: The latest news from Europe!
+                Message received from the exchange company.exchange.routing
+                Routing key: americas
+                Message: The latest news from the Americas!             
+             */
+
         }
     }
 }
