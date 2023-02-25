@@ -29,28 +29,31 @@ namespace Publisher6Header
             IConnection connection = connectionFactory.CreateConnection();
             IModel channel = connection.CreateModel();
 
-            channel.ExchangeDeclare("company.exchange.headers", ExchangeType.Headers, true, false, null);
-            channel.QueueDeclare("company.queue.headers", true, false, false, null);
+            string sQueue = "company.queue.headers";
+            string sExchange = "company.exchange.headers";
+            channel.ExchangeDeclare(sExchange, ExchangeType.Headers, true, false, null);
+            channel.QueueDeclare(sQueue, true, false, false, null);
+
+            // category=animal and type=mammal
             Dictionary<string, object> headerOptionsWithAll = new Dictionary<string, object>();
             headerOptionsWithAll.Add("x-match", "all");
             headerOptionsWithAll.Add("category", "animal");
             headerOptionsWithAll.Add("type", "mammal");
+            channel.QueueBind(sQueue, sExchange, "", headerOptionsWithAll);
 
-            channel.QueueBind("company.queue.headers", "company.exchange.headers", "", headerOptionsWithAll);
-
+            // category=plant or type=tree
             Dictionary<string, object> headerOptionsWithAny = new Dictionary<string, object>();
             headerOptionsWithAny.Add("x-match", "any");
             headerOptionsWithAny.Add("category", "plant");
             headerOptionsWithAny.Add("type", "tree");
-
-            channel.QueueBind("company.queue.headers", "company.exchange.headers", "", headerOptionsWithAny);
+            channel.QueueBind(sQueue, sExchange, "", headerOptionsWithAny);
 
             IBasicProperties properties = channel.CreateBasicProperties();
             Dictionary<string, object> messageHeaders = new Dictionary<string, object>();
             messageHeaders.Add("category", "animal");
             messageHeaders.Add("type", "insect");
             properties.Headers = messageHeaders;
-            PublicationAddress address = new PublicationAddress(ExchangeType.Headers, "company.exchange.headers", "");
+            PublicationAddress address = new PublicationAddress(ExchangeType.Headers, sExchange, "");
             channel.BasicPublish(address, properties, Encoding.UTF8.GetBytes("Hello from the world of insects"));
 
             properties = channel.CreateBasicProperties();
@@ -103,6 +106,42 @@ namespace Publisher6Header
 
             channel.Close();
             connection.Close();
+
+/*
+output sample in consumer:
+Message received from the exchange company.exchange.headers
+Message: Hello from the world of awesome mammals
+Headers:
+category: animal
+type: mammal
+mood: awesome
+
+Message received from the exchange company.exchange.headers
+Message: Hello from the world of mammals
+Headers:
+category: animal
+type: mammal
+
+Message received from the exchange company.exchange.headers
+Message: Hello from the world of plants
+Headers:
+category: plant
+
+Message received from the exchange company.exchange.headers
+Message: Hello from the world of trees
+Headers:
+category: plant
+type: tree
+
+Message received from the exchange company.exchange.headers
+Message: Hello from the world of sad trees
+Headers:
+mood: sad
+type: tree
+
+The messages from “insects”, “fungi” and “animals” were discarded as their routing patterns didn’t match any of the bindings we set up above.
+            
+*/
         }
     }
 }

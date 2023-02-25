@@ -1,5 +1,5 @@
 From: 011netservice@gmail.com
-Date: 2023-02-23
+Date: 2023-02-25
 Subject: MassTransit with RabbitMQ
 File: https://github.com/github-honda/MassTransitPratice/blob/main/ReadmeMassTransit.txt
 
@@ -246,7 +246,7 @@ Messaging with RabbitMQ and .NET review part 8: routing and topics
 https://dotnetcodr.com/2016/08/25/messaging-with-rabbitmq-and-net-review-part-8-routing-and-topics/
 
 ○ Routing Key:
-ExchangeDeclare = ExchangeType.Direct
+ExchangeType.Direct
 	channel.ExchangeDeclare(sExchange, ExchangeType.Direct, true, false, null);
 
 Queue 可以 Bind 綁定為不同的(Exchange + Routing Keys)訊息存放位置.
@@ -263,7 +263,7 @@ https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016
 https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Receiver4Routing
 
 ○ Topics:
-ExchangeDeclare = ExchangeType.Topic
+ExchangeType.Topic
 	channel.ExchangeDeclare(sExchange, ExchangeType.Topic, true, false, null);
 
 Queue 可以 Bind 綁定為不同的(Exchange + Topics)訊息存放位置.
@@ -286,6 +286,34 @@ https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016
 原始碼:
 https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Receiver4Routing
 
+
+□ Part 9. Headers
+Messaging with RabbitMQ and .NET review part 9: headers
+https://dotnetcodr.com/2016/08/29/messaging-with-rabbitmq-and-net-review-part-9-headers/
+
+Headers 的用法跟 Topics 類似, 經由設定 "x-match" 屬性為 all 或 any 來過濾符合條件的 header:
+Queue 可以 Bind 綁定為不同的(Exchange + Headers)訊息存放位置.
+channel.ExchangeDeclare(sExchange, ExchangeType.Headers, true, false, null);
+Headers 分2種 all 和 any:
+all:  
+    // category=animal and type=mammal
+	Dictionary<string, object> headerOptionsWithAll = new Dictionary<string, object>();
+	headerOptionsWithAll.Add("x-match", "all");
+	headerOptionsWithAll.Add("category", "animal");
+	headerOptionsWithAll.Add("type", "mammal");
+	channel.QueueBind(sQueue, sExchange, "", headerOptionsWithAll);
+
+any:
+    // category=plant or type=tree
+	Dictionary<string, object> headerOptionsWithAny = new Dictionary<string, object>();
+	headerOptionsWithAny.Add("x-match", "any");
+	headerOptionsWithAny.Add("category", "plant");
+	headerOptionsWithAny.Add("type", "tree");
+	channel.QueueBind(sQueue, sExchange, "", headerOptionsWithAny);
+
+原始碼:
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Publisher6Header
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Receiver6Header
 
 #### 安裝 MassTransit1 RabbitMQ Docker
 □ 安裝 RabbitMQ Docker
