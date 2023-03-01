@@ -31,6 +31,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Publisher6Header", "Publish
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Receiver6Header", "Receiver6Header\Receiver6Header.csproj", "{C46B6E85-CE6C-4CA8-9DD6-1E00C7AD9A21}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Publisher7ScatterGather", "Publisher7ScatterGather\Publisher7ScatterGather.csproj", "{53A8D2C8-CFFA-4F8C-83C9-58DCA47C4E39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Receiver7ScatterGather", "Receiver7ScatterGather\Receiver7ScatterGather.csproj", "{D3E4C5EA-626D-4906-AA3E-61E1D2C177E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +97,14 @@ Global
 		{C46B6E85-CE6C-4CA8-9DD6-1E00C7AD9A21}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C46B6E85-CE6C-4CA8-9DD6-1E00C7AD9A21}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C46B6E85-CE6C-4CA8-9DD6-1E00C7AD9A21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53A8D2C8-CFFA-4F8C-83C9-58DCA47C4E39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53A8D2C8-CFFA-4F8C-83C9-58DCA47C4E39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53A8D2C8-CFFA-4F8C-83C9-58DCA47C4E39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53A8D2C8-CFFA-4F8C-83C9-58DCA47C4E39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3E4C5EA-626D-4906-AA3E-61E1D2C177E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3E4C5EA-626D-4906-AA3E-61E1D2C177E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3E4C5EA-626D-4906-AA3E-61E1D2C177E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3E4C5EA-626D-4906-AA3E-61E1D2C177E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
