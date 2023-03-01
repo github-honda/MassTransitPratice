@@ -82,6 +82,9 @@ namespace Publisher7ScatterGather
                 {
                     string response = Encoding.UTF8.GetString(basicDeliveryEventArgs.Body.ToArray());
                     Console.WriteLine("Response: {0}", response);
+
+                    // 重點: 測試結果發現 responses List 會記住 3 個 queue 回應的(共 3筆訊息)!
+                    // 這代表本函數始終保持執行在記憶體中, 持續等待(Event接收到3個訊息)
                     responses.Add(response);
 
                     // 5. Ending publisher service while match some conditions. 

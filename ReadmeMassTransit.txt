@@ -1,5 +1,5 @@
 From: 011netservice@gmail.com
-Date: 2023-02-25
+Date: 2023-03-01
 Subject: MassTransit with RabbitMQ
 File: https://github.com/github-honda/MassTransitPratice/blob/main/ReadmeMassTransit.txt
 
@@ -116,12 +116,11 @@ https://dotnetcodr.com/messaging/
 原始碼: 
 https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016  
 
-請先讀前2篇, 並照著內容設定:
 □ Part 1. 基本概念
 Messaging with RabbitMQ and .NET review part 1: foundations and terminology
 https://dotnetcodr.com/2016/08/02/messaging-with-rabbitmq-and-net-review-part-1-foundations-and-terminology/
 
-□ Part 2. RabbitMQ 安裝與設定
+□ Part 2. 安裝設定 RabbitMQ
 Messaging with RabbitMQ and .NET review part 2: installation and setup
 https://dotnetcodr.com/2016/08/03/messaging-with-rabbitmq-and-net-review-part-2-installation-and-setup/
 原範例是安裝 RabbitMQ 到主 Host, 再設定一些配合範例程式執行的 RabbitMQ 參數.
@@ -156,14 +155,17 @@ Write regexp: .*
 Read regexp: .*
 按下 Set Permission 按鍵後, 可看到新增授權在上方 Current permissions 清單中.
 
-□ Part 3. Publisher1
+□ Part 3. 以程式測試發佈訊息
 Messaging with RabbitMQ and .NET review part 3: the .NET client and some initial code
 https://dotnetcodr.com/2016/08/05/messaging-with-rabbitmq-and-net-review-part-3-the-net-client-and-some-initial-code/
+
 示範 Open Channel 和 Publishing message.
 1. 偵測可否連線.
 2. 建立 RabbitMQ Channel.
 2.1 Durable: Message 會持續保留在 RabbitMQ 中, 即使關機後重新開啟, 仍會存留訊息.
 3. 經由 Channel 發布訊息.
+
+message exchange patterns (MEPs) = ExchangeType.Direct
 
 原始碼: 
 https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/RabbitMQClient1 
@@ -174,7 +176,7 @@ https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016
 1.1.1 點選 (my.first.queue).Get messages 可以檢視訊息內容.
 2. Exchanges.Bindings 多了一列資料: To=my.first.queue. 
 
-□ Part 4. Receiver1
+□ Part 4. 單向接收訊息
 Messaging with RabbitMQ and .NET review part 4: one way messaging with a basic consumer
 https://dotnetcodr.com/2016/08/08/messaging-with-rabbitmq-and-net-review-part-4-one-way-messaging-with-a-basic-consumer/
 示範接收 Onew-way messages
@@ -185,33 +187,32 @@ https://dotnetcodr.com/2016/08/08/messaging-with-rabbitmq-and-net-review-part-4-
 https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/ReceiverOneWayMessage
 
 
-□ Part 5. Receiver1Event
+□ Part 5. 以事件通知方式接收訊息
 Messaging with RabbitMQ and .NET review part 5: one way messaging with an event based consumer
 https://dotnetcodr.com/2016/08/10/messaging-with-rabbitmq-and-net-review-part-5-one-way-messaging-with-an-event-based-consumer/
 示範以事件通知接收到訊息: 將(Part 4. Receiver1)改為訊息通知.
 原始碼: 
 https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Receiver1Event
 
-□ Part 6. Fanout exchange
+□ Part 6. 多點傳輸
 Messaging with RabbitMQ and .NET review part 6: the fanout exchange type
 https://dotnetcodr.com/2016/08/15/messaging-with-rabbitmq-and-net-review-part-6-the-fanout-exchange-type/
-先前的範例, message exchange patterns (MEPs) 為 
-a. One way messaging
-b. worker queues.
-原始碼: 
-Fanout exchange, 將一個訊息, 同時發佈到多個 queue.
-Fanout exchange can be multiple queues bound to an exchange.
-https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Publisher2
 
+Fanout exchange, 可將一個訊息, 同時發佈到多個 queue.
+Fanout exchange can be multiple queues bound to an exchange.
 接收的方式, 跟先前示範的內容幾乎相同, 只是從不同的 queue 來源例如接收訊息.
-原始碼:
-接收 queue= mycompany.queues.accounting
+
+message exchange patterns (MEPs) = ExchangeType.Fanout
+
+原始碼, Fanout Exchange Publisher:
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Publisher2
+原始碼, 接收 queue= mycompany.queues.accounting
 https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Receiver2acc
-接收 queue=mycompany.queues.management
+原始碼, 接收 queue=mycompany.queues.management
 https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Receiver2Mng
 
 
-□ Part 7. Two-way messsaging
+□ Part 7. 雙向通訊
 Messaging with RabbitMQ and .NET review part 7: two way messaging
 https://dotnetcodr.com/2016/08/18/messaging-with-rabbitmq-and-net-review-part-7-two-way-messaging/
 
@@ -241,13 +242,12 @@ RPC與先前的MEP略有不同，因為涉及到一個響應隊列。發送者�
 請注意，此設置對於雙向消息並不是必需的。您可以使用專用交換機來路由消息。此外，響應隊列可以是一個固定的隊列。因此，默認的無名交換機，稱為管理GUI中的“（AMQP默認）”，以及臨時響應隊列的使用並非強制性的。但是，對於此目的，可能不需要專用交換機，了解如何使用默認交換機也是很好的。此外，臨時隊列的使用，這些隊列在所有使用它的通道關閉後會消失，也是重要的知識。
 在這個系列中，我們一直在使用Visual Studio中的演示控制台應用程序，並將繼續使用它。我們目前在其中有一個控制台項目，其中包含發送者的所有代碼。我們將在此基礎上構建，設置RPC場景中的發布者。
 
-□ Part 8. Routing key and Topics
+□ Part 8. 路由鍵 和 主題
 Messaging with RabbitMQ and .NET review part 8: routing and topics
 https://dotnetcodr.com/2016/08/25/messaging-with-rabbitmq-and-net-review-part-8-routing-and-topics/
 
 ○ Routing Key:
-ExchangeType.Direct
-	channel.ExchangeDeclare(sExchange, ExchangeType.Direct, true, false, null);
+message exchange patterns (MEPs) = ExchangeType.Direct
 
 Queue 可以 Bind 綁定為不同的(Exchange + Routing Keys)訊息存放位置.
 因此接收一個 queue 的訊息時, 就可以接收來自不同 (Exchange + Routing Keys) 的訊息來源.
@@ -263,8 +263,7 @@ https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016
 https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Receiver4Routing
 
 ○ Topics:
-ExchangeType.Topic
-	channel.ExchangeDeclare(sExchange, ExchangeType.Topic, true, false, null);
+message exchange patterns (MEPs) = ExchangeType.Topic
 
 Queue 可以 Bind 綁定為不同的(Exchange + Topics)訊息存放位置.
 因此接收一個 queue 的訊息時, 就可以接收來自不同 (Exchange + Topics) 的訊息來源.
@@ -287,13 +286,15 @@ https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016
 https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Receiver4Routing
 
 
-□ Part 9. Headers
+□ Part 9. 標頭設定值
 Messaging with RabbitMQ and .NET review part 9: headers
 https://dotnetcodr.com/2016/08/29/messaging-with-rabbitmq-and-net-review-part-9-headers/
 
-Headers 的用法跟 Topics 類似, 經由設定 "x-match" 屬性為 all 或 any 來過濾符合條件的 header:
+Headers 的用法跟 Topics 類似, 經由設定 html headers "x-match" 屬性為 all 或 any 來過濾符合條件的 header:
 Queue 可以 Bind 綁定為不同的(Exchange + Headers)訊息存放位置.
-channel.ExchangeDeclare(sExchange, ExchangeType.Headers, true, false, null);
+
+message exchange patterns (MEPs) = ExchangeType.Headers
+
 Headers 分2種 all 和 any:
 all:  
     // category=animal and type=mammal
@@ -314,6 +315,36 @@ any:
 原始碼:
 https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Publisher6Header
 https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Receiver6Header
+
+□ Part 10. 分散/收集 (scatter/gather) 雙向多點通訊
+Messaging with RabbitMQ and .NET review part 10: scatter/gather
+https://dotnetcodr.com/2016/09/01/messaging-with-rabbitmq-and-net-review-part-10-scattergather/
+(Scatter/Gather) 的工作模式類似 (two-way messaging), 但是可以接收不同來源 consumers 的資料.
+It is similar to two-way messaging but the publisher will get the responses from multiple consumers.
+
+任一種 message exchange patterns (MEPs) 都可以實作分散/收集 (scatter/gather)的通訊方式.
+本範例僅是以 message exchange patterns (MEPs) = ExchangeType.Fanout 示範.
+
+分散/收集 Scatter/Gather, 原是 CPU DMA 處理功能概念: 
+DMA是所有現代電腦的重要特色，它允許不同速度的硬體裝置來溝通，而不需要依於中央處理器的大量中斷負載。否則，中央處理器需要從來源把每一片段的資料複製到暫存器，然後把它們再次寫回到新的地方。在這個時間中，中央處理器對於其他的工作來說就無法使用。
+DMA傳輸常使用在將一個記憶體區從一個裝置複製到另外一個。當中央處理器初始化這個傳輸動作，傳輸動作本身是由DMA控制器來實行和完成。典型的例子就是移動一個外部記憶體的區塊到晶片內部更快的記憶體去。像是這樣的操作並沒有讓處理器工作拖延，使其可以被重新排程去處理其他的工作。DMA傳輸對於高效能嵌入式系統演算法和網路是很重要的。 舉個例子，個人電腦的ISA DMA控制器擁有8個DMA通道，其中的7個通道是可以讓計算機的中央處理器所利用。每一個DMA通道有一個16位元位址暫存器和一個16位元計數暫存器。要初始化資料傳輸時，裝置驅動程式一起設定DMA通道的位址和計數暫存器，以及資料傳輸的方向，讀取或寫入。然後指示DMA硬體開始這個傳輸動作。當傳輸結束的時候，裝置就會以中斷的方式通知中央處理器。
+"分散-收集"（Scatter-gather）DMA允許在一次單一的DMA處理中傳輸資料到多個記憶體區域。相當於把多個簡單的DMA要求串在一起。同樣，這樣做的目的是要減輕中央處理器的多次輸出輸入中斷和資料複製任務。 DRQ意為DMA要求；DACK意為DMA確認。這些符號一般在有DMA功能的電腦系統硬體概要上可以看到。它們表示了介於中央處理器和DMA控制器之間的電子訊號傳輸線路。
+
+原始碼:
+Publisher:
+  1. 綁定多個 Queue 繫結到同一個 Exchange 同時開放連線.
+  2. 接收回應時, 可檢查 CorrelationId 確定來源.
+  重點: 測試結果發現 responses List 會記住 3 個 queue 回應的(共 3筆訊息)!
+  這代表本函數始終保持執行在記憶體中, 持續等待(Event接收到3個訊息)
+  https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Publisher7ScatterGather
+
+Consumer: 
+  接收訊息並回應訊息後就關閉 Connetion, 即可空出 queue 給其他人使用.
+  因此測試方式為: 
+     將本程式複製為3個, 分別改寫為在接收訊息後, 回應三個不同的訊息到 ReplyTo queue. 
+     同時執行3個程式測試.
+  https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Receiver7ScatterGather
+
 
 #### 安裝 MassTransit1 RabbitMQ Docker
 □ 安裝 RabbitMQ Docker
