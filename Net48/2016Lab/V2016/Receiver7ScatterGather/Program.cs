@@ -29,7 +29,9 @@ namespace Receiver7ScatterGather
             EventingBasicConsumer eventingBasicConsumer = new EventingBasicConsumer(channel);
 
             // 接收訊息並回應訊息後就關閉 Connetion, 即可空出 queue 給其他人使用.
-            // 測試方式: 將本程式複製3個, 分別改寫為在接收訊息後, 回應到三個不同的queue. 同時執行3個程式測試.
+            // 因此測試方式為: 
+            //   將本程式複製為3個, 分別改寫為在接收訊息後, 回應三個不同的訊息到 ReplyTo queue. 
+            //   同時執行3個程式測試.
             string consumerId = "A";
             Console.WriteLine(string.Concat("Consumer ", consumerId, " up and running, waiting for the publisher to start the bidding process."));
             eventingBasicConsumer.Received += (sender, basicDeliveryEventArgs) =>

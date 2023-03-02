@@ -35,6 +35,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Publisher7ScatterGather", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Receiver7ScatterGather", "Receiver7ScatterGather\Receiver7ScatterGather.csproj", "{D3E4C5EA-626D-4906-AA3E-61E1D2C177E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Publisher8MissingQueue", "Publisher8MissingQueue\Publisher8MissingQueue.csproj", "{69857305-FB9F-4A2B-94D9-4F4B61E2A1E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Publisher8ConfirmSelect", "Publisher8ConfirmSelect\Publisher8ConfirmSelect.csproj", "{51C8BB94-2F29-4A86-A6BD-A594427F9444}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,6 +109,14 @@ Global
 		{D3E4C5EA-626D-4906-AA3E-61E1D2C177E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3E4C5EA-626D-4906-AA3E-61E1D2C177E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3E4C5EA-626D-4906-AA3E-61E1D2C177E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69857305-FB9F-4A2B-94D9-4F4B61E2A1E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69857305-FB9F-4A2B-94D9-4F4B61E2A1E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69857305-FB9F-4A2B-94D9-4F4B61E2A1E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69857305-FB9F-4A2B-94D9-4F4B61E2A1E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51C8BB94-2F29-4A86-A6BD-A594427F9444}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51C8BB94-2F29-4A86-A6BD-A594427F9444}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51C8BB94-2F29-4A86-A6BD-A594427F9444}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51C8BB94-2F29-4A86-A6BD-A594427F9444}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

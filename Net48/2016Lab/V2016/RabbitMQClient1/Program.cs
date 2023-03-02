@@ -14,7 +14,7 @@ namespace RabbitMQClient1
         static void Main(string[] args)
         {
             MyIsOpenConnection();
-            MyOpenChannel();
+            SetUpDirectExchange();
             Console.WriteLine("Main done...");
             Console.ReadKey();
         }
@@ -22,7 +22,7 @@ namespace RabbitMQClient1
         /// <summary>
         /// Test opening channel.
         /// </summary>
-        static void MyOpenChannel()
+        static void SetUpDirectExchange()
         {
             // ref: https://dotnetcodr.com/2016/08/05/messaging-with-rabbitmq-and-net-review-part-3-the-net-client-and-some-initial-code/
             ConnectionFactory connectionFactory = new ConnectionFactory();

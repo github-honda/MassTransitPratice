@@ -12,12 +12,12 @@ namespace Publisher2
     {
         static void Main(string[] args)
         {
-            MyOpenChannelFanoutExchange();
+            SetUpFanoutExchange();
 
             Console.WriteLine("Main done...");
             Console.ReadKey();
         }
-        static void MyOpenChannelFanoutExchange()
+        static void SetUpFanoutExchange()
         {
             // ref: https://dotnetcodr.com/2016/08/15/messaging-with-rabbitmq-and-net-review-part-6-the-fanout-exchange-type/
 
