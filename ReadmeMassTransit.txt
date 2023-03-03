@@ -1,5 +1,5 @@
 From: 011netservice@gmail.com
-Date: 2023-03-01
+Date: 2023-03-03
 Subject: MassTransit with RabbitMQ
 File: https://github.com/github-honda/MassTransitPratice/blob/main/ReadmeMassTransit.txt
 
@@ -109,8 +109,7 @@ https://github.com/github-honda/MassTransitPratice/tree/main/GettingStarted-Rabb
 $ dotnet run
 
 
-#### .Net Framework 範例.
-這是 2016-08, .Net Framework 的範例.
+#### 2016-08 RabbitMQ.NET Updated series  
 https://dotnetcodr.com/messaging/ 
 
 原始碼: 
@@ -344,6 +343,24 @@ Consumer:
      將本程式複製為3個, 分別改寫為在接收訊息後, 回應三個不同的訊息到 ReplyTo queue. 
      同時執行3個程式測試.
   https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Receiver7ScatterGather
+
+
+□ Part 11. various other topics
+https://dotnetcodr.com/2016/09/05/messaging-with-rabbitmq-and-net-review-part-11-various-other-topics/
+Messaging with RabbitMQ and .NET review part 11: various other topics
+1. Missing queue in publisher.
+2. Confirmation from the exchange.
+	a. ConfirmSelects: it activates feedback mechanism for the publisher
+	b. The BasicAcks event handler which is called in case the message broker has acknowledged the message from the publisher
+	c. The BasicNacks event handler which is triggered in case RabbitMq for some reason could not acknowledge a message. In this case you can re-send a message if it’s of critical importance
+3. Unacknowledged messages.
+原始碼:
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Publisher8ConfirmSelect
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/Publisher8MissingQueue
+
+
+#### 2014 RabbitMQ.NET Original series  
+原版使用 RabbitMqService 1.0.3 只出到 2019, 已不支援 .net framework 4.8, 因此改用新版 RabbitMQ.Client 6.4.0.
 
 
 #### 安裝 MassTransit1 RabbitMQ Docker

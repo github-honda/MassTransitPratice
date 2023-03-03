@@ -40,7 +40,7 @@ namespace ReceiverOneWayMessage
             bool Pglobal = false; // for the current channel only, not for the entire connection.
             channel.BasicQos(PprefetchSize, PprefetchCount, Pglobal);
             
-            DefaultBasicConsumer Consumer1 = new MyReceive1(channel);
+            DefaultBasicConsumer Consumer1 = new MyDefaultBasicConsumer(channel);
             string sQueueName = "my.first.queue";
             bool AutoAct = false; // No acknowledgement.
             channel.BasicConsume(sQueueName, AutoAct, Consumer1);
