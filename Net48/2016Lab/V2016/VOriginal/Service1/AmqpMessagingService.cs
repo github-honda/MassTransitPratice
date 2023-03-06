@@ -19,6 +19,11 @@ namespace Service1
 
         // worker demo
         private string _workerQueueDemoQueueName = "WorkerQueueDemoQueue";
+
+        // publish/Subscribe demo
+        private string _publishSubscribeExchangeName = "PublishSubscribeExchange";
+        private string _publishSubscribeQueueOne = "PublishSubscribeQueueOne";
+        private string _publishSubscribeQueueTwo = "PublishSubscribeQueueTwo";
         public IConnection GetRabbitMqConnection()
         {
             ConnectionFactory connectionFactory = new ConnectionFactory();
@@ -36,6 +41,15 @@ namespace Service1
         {
             model.QueueDeclare(_workerQueueDemoQueueName, _durable, false, false, null);
         }
+        public void SetUpExchangeAndQueuesForDemo(IModel model)
+        {
+            model.ExchangeDeclare(_publishSubscribeExchangeName, ExchangeType.Fanout, true);
+            model.QueueDeclare(_publishSubscribeQueueOne, true, false, false, null);
+            model.QueueDeclare(_publishSubscribeQueueTwo, true, false, false, null);
+            model.QueueBind(_publishSubscribeQueueOne, _publishSubscribeExchangeName, "");
+            model.QueueBind(_publishSubscribeQueueTwo, _publishSubscribeExchangeName, "");
+        }
+
         public void SendOneWayMessage(string message, IModel model)
         {
             IBasicProperties basicProperties = model.CreateBasicProperties();
@@ -51,6 +65,14 @@ namespace Service1
             basicProperties.Persistent = _durable;
             byte[] messageBytes = Encoding.UTF8.GetBytes(message);
             model.BasicPublish(_exchangeName, _workerQueueDemoQueueName, basicProperties, messageBytes);
+        }
+        public void SendMessageToPublishSubscribeQueues(string message, IModel model)
+        {
+            IBasicProperties basicProperties = model.CreateBasicProperties();
+            //basicProperties.SetPersistent(_durable);
+            basicProperties.Persistent = _durable;
+            byte[] messageBytes = Encoding.UTF8.GetBytes(message);
+            model.BasicPublish(_publishSubscribeExchangeName, "", basicProperties, messageBytes);
         }
         public void ReceiveOneWayMessages(IModel model)
         {
@@ -85,6 +107,39 @@ namespace Service1
             model.BasicQos(0, 1, false); //basic quality of service
             MyDefaultBasicConsumer consumer = new MyDefaultBasicConsumer(model);
             model.BasicConsume(_workerQueueDemoQueueName, false, consumer);
+        }
+        public void ReceivePublishSubscribeMessageReceiverOne(IModel model)
+        {
+            // 20230304, Honda, Change Subscription
+            //model.BasicQos(0, 1, false);
+            //Subscription subscription = new Subscription(model, _publishSubscribeQueueOne, false);
+            //while (true)
+            //{
+            //    BasicDeliverEventArgs deliveryArguments = subscription.Next();
+            //    String message = Encoding.UTF8.GetString(deliveryArguments.Body);
+            //    Console.WriteLine("Message from queue: {0}", message);
+            //    subscription.Ack(deliveryArguments);
+            //}
+            model.BasicQos(0, 1, false);
+            MyDefaultBasicConsumer consumer = new MyDefaultBasicConsumer(model);
+            model.BasicConsume(_publishSubscribeQueueOne, false, consumer);
+        }
+
+        public void ReceivePublishSubscribeMessageReceiverTwo(IModel model)
+        {
+            // 20230304, Honda, Change Subscription
+            //model.BasicQos(0, 1, false);
+            //Subscription subscription = new Subscription(model, _publishSubscribeQueueTwo, false);
+            //while (true)
+            //{
+            //    BasicDeliverEventArgs deliveryArguments = subscription.Next();
+            //    String message = Encoding.UTF8.GetString(deliveryArguments.Body);
+            //    Console.WriteLine("Message from queue: {0}", message);
+            //    subscription.Ack(deliveryArguments);
+            //}
+            model.BasicQos(0, 1, false);
+            MyDefaultBasicConsumer consumer = new MyDefaultBasicConsumer(model);
+            model.BasicConsume(_publishSubscribeQueueTwo, false, consumer);
         }
     }
 }
