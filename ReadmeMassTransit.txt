@@ -1,5 +1,5 @@
 From: 011netservice@gmail.com
-Date: 2023-03-03
+Date: 2023-03-04
 Subject: MassTransit with RabbitMQ
 File: https://github.com/github-honda/MassTransitPratice/blob/main/ReadmeMassTransit.txt
 
@@ -360,7 +360,54 @@ https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016
 
 
 #### 2014 RabbitMQ.NET Original series  
-原版使用 RabbitMqService 1.0.3 只出到 2019, 已不支援 .net framework 4.8, 因此改用新版 RabbitMQ.Client 6.4.0.
+https://dotnetcodr.com/messaging/
+原版 Original series 使用 RabbitMqService 1.0.3 只出到 2019, 已不支援 .net framework 4.8, 
+因此改用新版 RabbitMQ.Client 6.4.0.
+
+原始碼:
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal
+
+□ Messaging with RabbitMQ and .NET C# part 3: message exchange patterns
+
+○ MEP One way messaging, 單向發佈訊息
+原始碼, RabbitMqService:
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Service1
+原始碼, OneWayMessageSender:
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Publisher1
+原始碼, OneWayMessageReceiver:
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Consumer1
+
+○ MEP Worker queues, 單向多點發佈訊息
+原始碼, RabbitMqService:
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Service1
+原始碼, WorkerQueueSender:
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Publisher2
+原始碼, WorkerQueueReceiverOne:
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Consumer2A
+原始碼, WorkerQueueReceiverTwo:
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Consumer2B
+
+○ Publish/Subscribe, 單向多點訂閱訊息
+原始碼, RabbitMqService:
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Service1
+原始碼, PublishSubscribeSender:
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Publisher3
+原始碼, PublishSubscribeReceiverOne:
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Consumer3A
+原始碼, PublishSubscribeReceiverTwo:
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Consumer3B
+
+
+○ Remote Procedure (RPC)
+
+
+Messaging with RabbitMQ and .NET C# part 4: routing and topics
+Messaging with RabbitMQ and .NET C# part 5: headers and scatter/gather
+RabbitMQ in .NET: data serialisation
+RabbitMQ in .NET: data serialisation II
+RabbitMQ in .NET: handling large messages
+RabbitMQ in .NET C#: basic error handling in Receiver
+RabbitMQ in .NET C#: more complex error handling in the Receiver
 
 
 #### 安裝 MassTransit1 RabbitMQ Docker
