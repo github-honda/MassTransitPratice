@@ -1,5 +1,5 @@
 From: 011netservice@gmail.com
-Date: 2023-03-04
+Date: 2023-03-13, 持續更新中.
 Subject: MassTransit with RabbitMQ
 File: https://github.com/github-honda/MassTransitPratice/blob/main/ReadmeMassTransit.txt
 
@@ -368,6 +368,7 @@ https://dotnetcodr.com/messaging/
 https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal
 
 □ Messaging with RabbitMQ and .NET C# part 3: message exchange patterns
+https://dotnetcodr.com/2014/05/05/messaging-with-rabbitmq-and-net-c-part-3-message-exchange-patterns/
 
 ○ MEP One way messaging, 單向發佈訊息
 原始碼, RabbitMqService:
@@ -387,7 +388,7 @@ https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016
 原始碼, WorkerQueueReceiverTwo:
 https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Consumer2B
 
-○ Publish/Subscribe, 單向多點訂閱訊息
+○ MEP Publish/Subscribe, 單向多點訂閱訊息
 原始碼, RabbitMqService:
 https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Service1
 原始碼, PublishSubscribeSender:
@@ -397,8 +398,18 @@ https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016
 原始碼, PublishSubscribeReceiverTwo:
 https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Consumer3B
 
-
 ○ Remote Procedure (RPC)
+原始碼, AmqpMessagingService
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Service1
+原始碼, RpcSender
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Publisher4
+原始碼, RpcReceiver
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Consumer4
+
+□ Messaging with RabbitMQ and .NET C# part 4: routing and topics
+○ Routing
+○ Topics
+
 
 
 Messaging with RabbitMQ and .NET C# part 4: routing and topics
