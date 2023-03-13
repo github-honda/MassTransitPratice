@@ -40,6 +40,12 @@ namespace Service1
         private string _routingKeyQueueOne = "RoutingKeyQueueOne";
         private string _routingKeyQueueTwo = "RoutingKeyQueueTwo";
 
+        // Topics
+        private string _topicsExchange = "TopicsExchange";
+        private string _topicsQueueOne = "TopicsQueueOne";
+        private string _topicsQueueTwo = "TopicsQueueTwo";
+        private string _topicsQueueThree = "TopicsQueueThree";
+
         public IConnection GetRabbitMqConnection()
         {
             ConnectionFactory connectionFactory = new ConnectionFactory();
@@ -82,6 +88,16 @@ namespace Service1
             //model.QueueBind(_routingKeyQueueTwo, _routingKeyExchange, "trucks");
             //model.QueueBind(_routingKeyQueueTwo, _routingKeyExchange, "donkeys");
             //model.QueueBind(_routingKeyQueueTwo, _routingKeyExchange, "mules");
+        }
+        public void SetUpExchangeAndQueuesForTopicsDemo(IModel model)
+        {
+            model.ExchangeDeclare(_topicsExchange, ExchangeType.Topic, true);
+            model.QueueDeclare(_topicsQueueOne, true, false, false, null);
+            model.QueueDeclare(_topicsQueueTwo, true, false, false, null);
+            model.QueueDeclare(_topicsQueueThree, true, false, false, null);
+            model.QueueBind(_topicsQueueOne, _topicsExchange, "*.world.*");
+            model.QueueBind(_topicsQueueTwo, _topicsExchange, "#.world.#");
+            model.QueueBind(_topicsQueueThree, _topicsExchange, "#.world");
         }
 
         public void SendOneWayMessage(string message, IModel model)
@@ -182,6 +198,14 @@ namespace Service1
             basicProperties.Persistent = _durable;
             byte[] messageBytes = Encoding.UTF8.GetBytes(message);
             model.BasicPublish(_routingKeyExchange, routingKey, basicProperties, messageBytes);
+        }
+        public void SendTopicsMessage(string message, string routingKey, IModel model)
+        {
+            IBasicProperties basicProperties = model.CreateBasicProperties();
+            //basicProperties.SetPersistent(_durable);
+            basicProperties.Persistent = _durable;
+            byte[] messageBytes = Encoding.UTF8.GetBytes(message);
+            model.BasicPublish(_topicsExchange, routingKey, basicProperties, messageBytes);
         }
         public void ReceiveOneWayMessages(IModel model)
         {
@@ -331,7 +355,73 @@ namespace Service1
                 Console.WriteLine($"Message from queue {_routingKeyQueueTwo}: {message}");
                 model.BasicAck(basicDeliveryEventArgs.DeliveryTag, false);
             };
-
         }
+        public void ReceiveTopicMessageReceiverOne(IModel model)
+        {
+            //model.BasicQos(0, 1, false);
+            //Subscription subscription = new Subscription(model, _topicsQueueOne, false);
+            //while (true)
+            //{
+            //    BasicDeliverEventArgs deliveryArguments = subscription.Next();
+            //    String message = Encoding.UTF8.GetString(deliveryArguments.Body);
+            //    Console.WriteLine("Message from queue: {0}", message);
+            //    subscription.Ack(deliveryArguments);
+            //}
+            model.BasicQos(0, 1, false);
+            EventingBasicConsumer consumer = new EventingBasicConsumer(model);
+            model.BasicConsume(_topicsQueueOne, false, consumer);
+            consumer.Received += (sender, basicDeliveryEventArgs) =>
+            {
+                IBasicProperties props = basicDeliveryEventArgs.BasicProperties;
+                string message = Encoding.UTF8.GetString(basicDeliveryEventArgs.Body.ToArray());
+                Console.WriteLine($"Message from queue {_topicsQueueOne}: {message}");
+                model.BasicAck(basicDeliveryEventArgs.DeliveryTag, false);
+            };
+        }
+        public void ReceiveTopicMessageReceiverTwo(IModel model)
+        {
+            //model.BasicQos(0, 1, false);
+            //Subscription subscription = new Subscription(model, _topicsQueueTwo, false);
+            //while (true)
+            //{
+            //    BasicDeliverEventArgs deliveryArguments = subscription.Next();
+            //    String message = Encoding.UTF8.GetString(deliveryArguments.Body);
+            //    Console.WriteLine("Message from queue: {0}", message);
+            //    subscription.Ack(deliveryArguments);
+            //}
+            model.BasicQos(0, 1, false);
+            EventingBasicConsumer consumer = new EventingBasicConsumer(model);
+            model.BasicConsume(_topicsQueueTwo, false, consumer);
+            consumer.Received += (sender, basicDeliveryEventArgs) =>
+            {
+                IBasicProperties props = basicDeliveryEventArgs.BasicProperties;
+                string message = Encoding.UTF8.GetString(basicDeliveryEventArgs.Body.ToArray());
+                Console.WriteLine($"Message from queue {_topicsQueueTwo}: {message}");
+                model.BasicAck(basicDeliveryEventArgs.DeliveryTag, false);
+            };
+        }
+        public void ReceiveTopicMessageReceiverThree(IModel model)
+        {
+            //model.BasicQos(0, 1, false);
+            //Subscription subscription = new Subscription(model, _topicsQueueThree, false);
+            //while (true)
+            //{
+            //    BasicDeliverEventArgs deliveryArguments = subscription.Next();
+            //    String message = Encoding.UTF8.GetString(deliveryArguments.Body);
+            //    Console.WriteLine("Message from queue: {0}", message);
+            //    subscription.Ack(deliveryArguments);
+            //}
+            model.BasicQos(0, 1, false);
+            EventingBasicConsumer consumer = new EventingBasicConsumer(model);
+            model.BasicConsume(_topicsQueueThree, false, consumer);
+            consumer.Received += (sender, basicDeliveryEventArgs) =>
+            {
+                IBasicProperties props = basicDeliveryEventArgs.BasicProperties;
+                string message = Encoding.UTF8.GetString(basicDeliveryEventArgs.Body.ToArray());
+                Console.WriteLine($"Message from queue {_topicsQueueThree}: {message}");
+                model.BasicAck(basicDeliveryEventArgs.DeliveryTag, false);
+            };
+        }
+
     }
 }
