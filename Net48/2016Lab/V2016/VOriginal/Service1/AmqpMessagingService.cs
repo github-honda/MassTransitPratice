@@ -35,6 +35,11 @@ namespace Service1
         private EventingBasicConsumer _rpcConsumer;
         private string _responseQueue;
 
+        // routing
+        private string _routingKeyExchange = "RoutingKeyExchange";
+        private string _routingKeyQueueOne = "RoutingKeyQueueOne";
+        private string _routingKeyQueueTwo = "RoutingKeyQueueTwo";
+
         public IConnection GetRabbitMqConnection()
         {
             ConnectionFactory connectionFactory = new ConnectionFactory();
@@ -63,6 +68,20 @@ namespace Service1
         public void SetUpQueueForRpcDemo(IModel model)
         {
             model.QueueDeclare(_rpcQueueName, _durable, false, false, null);
+        }
+
+        public void SetUpExchangeAndQueuesForRoutingDemo(IModel model)
+        {
+            model.ExchangeDeclare(_routingKeyExchange, ExchangeType.Direct, true);
+            model.QueueDeclare(_routingKeyQueueOne, true, false, false, null);
+            model.QueueDeclare(_routingKeyQueueTwo, true, false, false, null);
+            model.QueueBind(_routingKeyQueueOne, _routingKeyExchange, "cars");
+            model.QueueBind(_routingKeyQueueTwo, _routingKeyExchange, "trucks");
+            
+            //// bind queue and the routing exchange with multiple routing keys: 
+            //model.QueueBind(_routingKeyQueueTwo, _routingKeyExchange, "trucks");
+            //model.QueueBind(_routingKeyQueueTwo, _routingKeyExchange, "donkeys");
+            //model.QueueBind(_routingKeyQueueTwo, _routingKeyExchange, "mules");
         }
 
         public void SendOneWayMessage(string message, IModel model)
@@ -156,7 +175,14 @@ namespace Service1
                 throw new TimeoutException("No response before the timeout period.");
             }
         }
-
+        public void SendRoutingMessage(string message, string routingKey, IModel model)
+        {
+            IBasicProperties basicProperties = model.CreateBasicProperties();
+            //basicProperties.SetPersistent(_durable);
+            basicProperties.Persistent = _durable;
+            byte[] messageBytes = Encoding.UTF8.GetBytes(message);
+            model.BasicPublish(_routingKeyExchange, routingKey, basicProperties, messageBytes);
+        }
         public void ReceiveOneWayMessages(IModel model)
         {
             // 20230303, Honda, Change QueueingBasicConsumer
@@ -259,6 +285,53 @@ namespace Service1
                 model.BasicPublish("", props.ReplyTo, replyBasicProperties, responseBytes);
                 model.BasicAck(basicDeliveryEventArgs.DeliveryTag, false);
             };
+        }
+
+        public void ReceiveRoutingMessageReceiverOne(IModel model)
+        {
+            //model.BasicQos(0, 1, false);
+            //Subscription subscription = new Subscription(model, _routingKeyQueueOne, false);
+            //while (true)
+            //{
+            //    BasicDeliverEventArgs deliveryArguments = subscription.Next();
+            //    String message = Encoding.UTF8.GetString(deliveryArguments.Body);
+            //    Console.WriteLine("Message from queue: {0}", message);
+            //    subscription.Ack(deliveryArguments);
+            //}
+            model.BasicQos(0, 1, false);
+            EventingBasicConsumer consumer = new EventingBasicConsumer(model);
+            model.BasicConsume(_routingKeyQueueOne, false, consumer);
+            consumer.Received += (sender, basicDeliveryEventArgs) =>
+            {
+                IBasicProperties props = basicDeliveryEventArgs.BasicProperties;
+                string message = Encoding.UTF8.GetString(basicDeliveryEventArgs.Body.ToArray());
+                Console.WriteLine($"Message from queue {_routingKeyQueueOne}: {message}");
+                model.BasicAck(basicDeliveryEventArgs.DeliveryTag, false);
+            };
+        }
+
+        public void ReceiveRoutingMessageReceiverTwo(IModel model)
+        {
+            //model.BasicQos(0, 1, false);
+            //Subscription subscription = new Subscription(model, _routingKeyQueueTwo, false);
+            //while (true)
+            //{
+            //    BasicDeliverEventArgs deliveryArguments = subscription.Next();
+            //    String message = Encoding.UTF8.GetString(deliveryArguments.Body);
+            //    Console.WriteLine("Message from queue: {0}", message);
+            //    subscription.Ack(deliveryArguments);
+            //}
+            model.BasicQos(0, 1, false);
+            EventingBasicConsumer consumer = new EventingBasicConsumer(model);
+            model.BasicConsume(_routingKeyQueueTwo, false, consumer);
+            consumer.Received += (sender, basicDeliveryEventArgs) =>
+            {
+                IBasicProperties props = basicDeliveryEventArgs.BasicProperties;
+                string message = Encoding.UTF8.GetString(basicDeliveryEventArgs.Body.ToArray());
+                Console.WriteLine($"Message from queue {_routingKeyQueueTwo}: {message}");
+                model.BasicAck(basicDeliveryEventArgs.DeliveryTag, false);
+            };
+
         }
     }
 }
