@@ -408,11 +408,36 @@ https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016
 
 □ Messaging with RabbitMQ and .NET C# part 4: routing and topics
 ○ Routing
+原始碼, SetUpExchangeAndQueuesForRoutingDemo
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Service1
+原始碼, RoutingSender
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Publisher5
+原始碼, RoutingReceiverOne, RoutingReceiverTwo
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Consumer5A
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Consumer5B
+
 ○ Topics
+原始碼, SetUpExchangeAndQueuesForTopicsDemo
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Service1
+原始碼, TopicsSender
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Publisher6
+原始碼, TopicsReceiverOne, TopicsReceiverTwo, TopicsReceiverThree
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Consumer6A
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Consumer6B
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Consumer6C
+
+□ Messaging with RabbitMQ and .NET C# part 5: headers and scatter/gather
+○ Headers
+原始碼, SetUpExchangeAndQueuesForHeadersDemo
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Service1
+原始碼, HeadersSender
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Publisher7
+原始碼, HeadersReceiverOne, HeadersReceiverTwo, HeadersReceiverThree
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Consumer7A
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Consumer7B
+https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016/VOriginal/Consumer7C
 
 
-
-Messaging with RabbitMQ and .NET C# part 4: routing and topics
 Messaging with RabbitMQ and .NET C# part 5: headers and scatter/gather
 RabbitMQ in .NET: data serialisation
 RabbitMQ in .NET: data serialisation II
