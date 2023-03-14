@@ -51,6 +51,16 @@ namespace Service1
         private string _headersQueueOne = "HeadersQueueOne";
         private string _headersQueueTwo = "HeadersQueueTwo";
         private string _headersQueueThree = "HeadersQueueThree";
+
+        // scatter/gather
+        private string _scatterGatherExchange = "ScatterGatherExchange";
+        private string _scatterGatherReceiverQueueOne = "ScatterGatherReceiverQueueOne";
+        private string _scatterGatherReceiverQueueTwo = "ScatterGatherReceiverQueueTwo";
+        private string _scatterGatherReceiverQueueThree = "ScatterGatherReceiverQueueThree";
+        //private QueueingBasicConsumer _scatterGatherConsumer;
+        private EventingBasicConsumer _scatterGatherConsumer;
+        private string _scatterGatherResponseQueue;
+
         public IConnection GetRabbitMqConnection()
         {
             ConnectionFactory connectionFactory = new ConnectionFactory();
@@ -129,6 +139,25 @@ namespace Service1
             bindingThreeHeaders.Add("category", "plant");
             bindingThreeHeaders.Add("type", "flower");
             model.QueueBind(_headersQueueThree, _headersExchange, "", bindingThreeHeaders);
+        }
+
+        public void SetUpExchangeAndQueuesForScatterGatherDemo(IModel model)
+        {
+            model.ExchangeDeclare(_scatterGatherExchange, ExchangeType.Topic, true);
+            model.QueueDeclare(_scatterGatherReceiverQueueOne, true, false, false, null);
+            model.QueueDeclare(_scatterGatherReceiverQueueTwo, true, false, false, null);
+            model.QueueDeclare(_scatterGatherReceiverQueueThree, true, false, false, null);
+
+            model.QueueBind(_scatterGatherReceiverQueueOne, _scatterGatherExchange, "cars");
+            model.QueueBind(_scatterGatherReceiverQueueOne, _scatterGatherExchange, "trucks");
+
+            model.QueueBind(_scatterGatherReceiverQueueTwo, _scatterGatherExchange, "cars");
+            model.QueueBind(_scatterGatherReceiverQueueTwo, _scatterGatherExchange, "aeroplanes");
+            model.QueueBind(_scatterGatherReceiverQueueTwo, _scatterGatherExchange, "buses");
+
+            model.QueueBind(_scatterGatherReceiverQueueThree, _scatterGatherExchange, "cars");
+            model.QueueBind(_scatterGatherReceiverQueueThree, _scatterGatherExchange, "buses");
+            model.QueueBind(_scatterGatherReceiverQueueThree, _scatterGatherExchange, "tractors");
         }
         public void SendOneWayMessage(string message, IModel model)
         {
@@ -245,6 +274,69 @@ namespace Service1
             basicProperties.Headers = headers;
             byte[] messageBytes = Encoding.UTF8.GetBytes(message);
             model.BasicPublish(_headersExchange, "", basicProperties, messageBytes);
+        }
+
+        public List<string> SendScatterGatherMessageToQueues(string message, IModel model, TimeSpan timeout, string routingKey, int minResponses)
+        {
+            List<string> responses = new List<string>();
+            if (string.IsNullOrEmpty(_scatterGatherResponseQueue))
+            {
+                _scatterGatherResponseQueue = model.QueueDeclare().QueueName;
+            }
+
+            if (_scatterGatherConsumer == null)
+            {
+                //_scatterGatherConsumer = new QueueingBasicConsumer(model);
+                _scatterGatherConsumer = new EventingBasicConsumer(model);
+                model.BasicConsume(_scatterGatherResponseQueue, true, _scatterGatherConsumer);
+            }
+
+            string correlationId = Guid.NewGuid().ToString();
+            bool bResponse = false;
+
+            IBasicProperties basicProperties = model.CreateBasicProperties();
+            basicProperties.ReplyTo = _scatterGatherResponseQueue;
+            basicProperties.CorrelationId = correlationId;
+
+            byte[] messageBytes = Encoding.UTF8.GetBytes(message);
+            model.BasicPublish(_scatterGatherExchange, routingKey, basicProperties, messageBytes);
+
+            DateTime timeoutDate = DateTime.UtcNow + timeout;
+            //// 20230314, change to EventingBasicConsumer
+            //while (DateTime.UtcNow <= timeoutDate)
+            //{
+            //    BasicDeliverEventArgs deliveryArguments;
+            //    _scatterGatherConsumer.Queue.Dequeue(500, out deliveryArguments);
+            //    if (deliveryArguments != null && deliveryArguments.BasicProperties != null
+            //        && deliveryArguments.BasicProperties.CorrelationId == correlationId)
+            //    {
+            //        string response = Encoding.UTF8.GetString(deliveryArguments.Body);
+            //        responses.Add(response);
+            //        if (responses.Count >= minResponses)
+            //        {
+            //            break;
+            //        }
+            //    }
+            //}
+            _scatterGatherConsumer.Received += (sender, basicDeliveryEventArgs) =>
+            {
+                IBasicProperties props = basicDeliveryEventArgs.BasicProperties;
+                if (basicDeliveryEventArgs.BasicProperties != null
+                && basicDeliveryEventArgs.BasicProperties.CorrelationId == correlationId)
+                {
+                    string response = Encoding.UTF8.GetString(basicDeliveryEventArgs.Body.ToArray());
+                    if (responses.Count >= minResponses)
+                        bResponse = true;
+                    else
+                        responses.Add(response);
+                }
+            };
+            Thread.Sleep(timeout);
+            if (bResponse)
+                Console.WriteLine("responses.Count >= minResponses");
+            else
+                Console.WriteLine("responses.Count < minResponses");
+            return responses;
         }
         public void ReceiveOneWayMessages(IModel model)
         {
@@ -573,6 +665,58 @@ namespace Service1
                 Console.WriteLine(messageBuilder.ToString());
                 model.BasicAck(basicDeliveryEventArgs.DeliveryTag, false);
             };
+        }
+
+        public void ReceiveScatterGatherMessageOne(IModel model)
+        {
+            ReceiveScatterGatherMessage(model, _scatterGatherReceiverQueueOne);
+        }
+
+        public void ReceiveScatterGatherMessageTwo(IModel model)
+        {
+            ReceiveScatterGatherMessage(model, _scatterGatherReceiverQueueTwo);
+        }
+
+        public void ReceiveScatterGatherMessageThree(IModel model)
+        {
+            ReceiveScatterGatherMessage(model, _scatterGatherReceiverQueueThree);
+        }
+
+        private void ReceiveScatterGatherMessage(IModel model, string queueName)
+        {
+            // 20230314, 舊寫法為 loop, 新寫法改用 EventingBasicConsumer
+            //model.BasicQos(0, 1, false);
+            //QueueingBasicConsumer consumer = new QueueingBasicConsumer(model);
+            //model.BasicConsume(queueName, false, consumer);
+            //while (true)
+            //{
+            //    BasicDeliverEventArgs deliveryArguments = consumer.Queue.Dequeue() as BasicDeliverEventArgs;
+            //    string message = Encoding.UTF8.GetString(deliveryArguments.Body);
+            //    Console.WriteLine("Message: {0} ; {1}", message, " Enter your response: ");
+            //    string response = Console.ReadLine();
+            //    IBasicProperties replyBasicProperties = model.CreateBasicProperties();
+            //    replyBasicProperties.CorrelationId = deliveryArguments.BasicProperties.CorrelationId;
+            //    byte[] responseBytes = Encoding.UTF8.GetBytes(response);
+            //    model.BasicPublish("", deliveryArguments.BasicProperties.ReplyTo, replyBasicProperties, responseBytes);
+            //    model.BasicAck(deliveryArguments.DeliveryTag, false);
+            //}
+            model.BasicQos(0, 1, false);
+            EventingBasicConsumer consumer = new EventingBasicConsumer(model);
+            model.BasicConsume(queueName, false, consumer);
+            consumer.Received += (sender, basicDeliveryEventArgs) =>
+            {
+                IBasicProperties props = basicDeliveryEventArgs.BasicProperties;
+                string message = Encoding.UTF8.GetString(basicDeliveryEventArgs.Body.ToArray());
+                Console.WriteLine("Message: {0} ; {1}", message, " Enter your response: ");
+                string response = Console.ReadLine();
+
+                IBasicProperties replyBasicProperties = model.CreateBasicProperties();
+                replyBasicProperties.CorrelationId = props.CorrelationId;
+                byte[] responseBytes = Encoding.UTF8.GetBytes(response);
+                model.BasicPublish("", props.ReplyTo, replyBasicProperties, responseBytes);
+                model.BasicAck(basicDeliveryEventArgs.DeliveryTag, false);
+            };
+
         }
     }
 }
