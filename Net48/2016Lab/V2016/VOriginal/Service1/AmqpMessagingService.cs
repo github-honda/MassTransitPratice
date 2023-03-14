@@ -46,6 +46,11 @@ namespace Service1
         private string _topicsQueueTwo = "TopicsQueueTwo";
         private string _topicsQueueThree = "TopicsQueueThree";
 
+        // headers
+        private string _headersExchange = "HeadersExchange";
+        private string _headersQueueOne = "HeadersQueueOne";
+        private string _headersQueueTwo = "HeadersQueueTwo";
+        private string _headersQueueThree = "HeadersQueueThree";
         public IConnection GetRabbitMqConnection()
         {
             ConnectionFactory connectionFactory = new ConnectionFactory();
@@ -100,6 +105,31 @@ namespace Service1
             model.QueueBind(_topicsQueueThree, _topicsExchange, "#.world");
         }
 
+        public void SetUpExchangeAndQueuesForHeadersDemo(IModel model)
+        {
+            model.ExchangeDeclare(_headersExchange, ExchangeType.Headers, true);
+            model.QueueDeclare(_headersQueueOne, true, false, false, null);
+            model.QueueDeclare(_headersQueueTwo, true, false, false, null);
+            model.QueueDeclare(_headersQueueThree, true, false, false, null);
+
+            Dictionary<string, object> bindingOneHeaders = new Dictionary<string, object>();
+            bindingOneHeaders.Add("x-match", "all");
+            bindingOneHeaders.Add("category", "animal");
+            bindingOneHeaders.Add("type", "mammal");
+            model.QueueBind(_headersQueueOne, _headersExchange, "", bindingOneHeaders);
+
+            Dictionary<string, object> bindingTwoHeaders = new Dictionary<string, object>();
+            bindingTwoHeaders.Add("x-match", "any");
+            bindingTwoHeaders.Add("category", "animal");
+            bindingTwoHeaders.Add("type", "insect");
+            model.QueueBind(_headersQueueTwo, _headersExchange, "", bindingTwoHeaders);
+
+            Dictionary<string, object> bindingThreeHeaders = new Dictionary<string, object>();
+            bindingThreeHeaders.Add("x-match", "any");
+            bindingThreeHeaders.Add("category", "plant");
+            bindingThreeHeaders.Add("type", "flower");
+            model.QueueBind(_headersQueueThree, _headersExchange, "", bindingThreeHeaders);
+        }
         public void SendOneWayMessage(string message, IModel model)
         {
             IBasicProperties basicProperties = model.CreateBasicProperties();
@@ -206,6 +236,15 @@ namespace Service1
             basicProperties.Persistent = _durable;
             byte[] messageBytes = Encoding.UTF8.GetBytes(message);
             model.BasicPublish(_topicsExchange, routingKey, basicProperties, messageBytes);
+        }
+        public void SendHeadersMessage(string message, Dictionary<string, object> headers, IModel model)
+        {
+            IBasicProperties basicProperties = model.CreateBasicProperties();
+            //basicProperties.SetPersistent(_durable);
+            basicProperties.Persistent = _durable;
+            basicProperties.Headers = headers;
+            byte[] messageBytes = Encoding.UTF8.GetBytes(message);
+            model.BasicPublish(_headersExchange, "", basicProperties, messageBytes);
         }
         public void ReceiveOneWayMessages(IModel model)
         {
@@ -423,5 +462,117 @@ namespace Service1
             };
         }
 
+        public void ReceiveHeadersMessageReceiverOne(IModel model)
+        {
+            //model.BasicQos(0, 1, false);
+            //Subscription subscription = new Subscription(model, _headersQueueOne, false);
+            //while (true)
+            //{
+            //    BasicDeliverEventArgs deliveryArguments = subscription.Next();
+            //    StringBuilder messageBuilder = new StringBuilder();
+            //    String message = Encoding.UTF8.GetString(deliveryArguments.Body);
+            //    messageBuilder.Append("Message from queue: ").Append(message).Append(". ");
+            //    foreach (string headerKey in deliveryArguments.BasicProperties.Headers.Keys)
+            //    {
+            //        byte[] value = deliveryArguments.BasicProperties.Headers[headerKey] as byte[];
+            //        messageBuilder.Append("Header key: ").Append(headerKey).Append(", value: ").Append(Encoding.UTF8.GetString(value)).Append("; ");
+            //    }
+
+            //    Console.WriteLine(messageBuilder.ToString());
+            //    subscription.Ack(deliveryArguments);
+            //}
+            model.BasicQos(0, 1, false);
+            EventingBasicConsumer consumer = new EventingBasicConsumer(model);
+            model.BasicConsume(_headersQueueOne, false, consumer);
+            consumer.Received += (sender, basicDeliveryEventArgs) =>
+            {
+                IBasicProperties props = basicDeliveryEventArgs.BasicProperties;
+                StringBuilder messageBuilder = new StringBuilder();
+                string message = Encoding.UTF8.GetString(basicDeliveryEventArgs.Body.ToArray());
+                messageBuilder.Append("Message from queue: ").Append(message).Append(". ");
+                foreach (string headerKey in basicDeliveryEventArgs.BasicProperties.Headers.Keys)
+                {
+                    byte[] value = basicDeliveryEventArgs.BasicProperties.Headers[headerKey] as byte[];
+                    messageBuilder.Append("Header key: ").Append(headerKey).Append(", value: ").Append(Encoding.UTF8.GetString(value)).Append("; ");
+                }
+                Console.WriteLine(messageBuilder.ToString());
+                model.BasicAck(basicDeliveryEventArgs.DeliveryTag, false);
+            };
+        }
+
+        public void ReceiveHeadersMessageReceiverTwo(IModel model)
+        {
+            //model.BasicQos(0, 1, false);
+            //Subscription subscription = new Subscription(model, _headersQueueTwo, false);
+            //while (true)
+            //{
+            //    BasicDeliverEventArgs deliveryArguments = subscription.Next();
+            //    StringBuilder messageBuilder = new StringBuilder();
+            //    String message = Encoding.UTF8.GetString(deliveryArguments.Body);
+            //    messageBuilder.Append("Message from queue: ").Append(message).Append(". ");
+            //    foreach (string headerKey in deliveryArguments.BasicProperties.Headers.Keys)
+            //    {
+            //        byte[] value = deliveryArguments.BasicProperties.Headers[headerKey] as byte[];
+            //        messageBuilder.Append("Header key: ").Append(headerKey).Append(", value: ").Append(Encoding.UTF8.GetString(value)).Append("; ");
+            //    }
+
+            //    Console.WriteLine(messageBuilder.ToString());
+            //    subscription.Ack(deliveryArguments);
+            //}
+            model.BasicQos(0, 1, false);
+            EventingBasicConsumer consumer = new EventingBasicConsumer(model);
+            model.BasicConsume(_headersQueueTwo, false, consumer);
+            consumer.Received += (sender, basicDeliveryEventArgs) =>
+            {
+                IBasicProperties props = basicDeliveryEventArgs.BasicProperties;
+                StringBuilder messageBuilder = new StringBuilder();
+                string message = Encoding.UTF8.GetString(basicDeliveryEventArgs.Body.ToArray());
+                messageBuilder.Append("Message from queue: ").Append(message).Append(". ");
+                foreach (string headerKey in basicDeliveryEventArgs.BasicProperties.Headers.Keys)
+                {
+                    byte[] value = basicDeliveryEventArgs.BasicProperties.Headers[headerKey] as byte[];
+                    messageBuilder.Append("Header key: ").Append(headerKey).Append(", value: ").Append(Encoding.UTF8.GetString(value)).Append("; ");
+                }
+                Console.WriteLine(messageBuilder.ToString());
+                model.BasicAck(basicDeliveryEventArgs.DeliveryTag, false);
+            };
+        }
+
+        public void ReceiveHeadersMessageReceiverThree(IModel model)
+        {
+            //model.BasicQos(0, 1, false);
+            //Subscription subscription = new Subscription(model, _headersQueueThree, false);
+            //while (true)
+            //{
+            //    BasicDeliverEventArgs deliveryArguments = subscription.Next();
+            //    StringBuilder messageBuilder = new StringBuilder();
+            //    String message = Encoding.UTF8.GetString(deliveryArguments.Body);
+            //    messageBuilder.Append("Message from queue: ").Append(message).Append(". ");
+            //    foreach (string headerKey in deliveryArguments.BasicProperties.Headers.Keys)
+            //    {
+            //        byte[] value = deliveryArguments.BasicProperties.Headers[headerKey] as byte[];
+            //        messageBuilder.Append("Header key: ").Append(headerKey).Append(", value: ").Append(Encoding.UTF8.GetString(value)).Append("; ");
+            //    }
+            //    Console.WriteLine(messageBuilder.ToString());
+            //    subscription.Ack(deliveryArguments);
+            //}
+            model.BasicQos(0, 1, false);
+            EventingBasicConsumer consumer = new EventingBasicConsumer(model);
+            model.BasicConsume(_headersQueueThree, false, consumer);
+            consumer.Received += (sender, basicDeliveryEventArgs) =>
+            {
+                IBasicProperties props = basicDeliveryEventArgs.BasicProperties;
+                StringBuilder messageBuilder = new StringBuilder();
+                string message = Encoding.UTF8.GetString(basicDeliveryEventArgs.Body.ToArray());
+                messageBuilder.Append("Message from queue: ").Append(message).Append(". ");
+                foreach (string headerKey in basicDeliveryEventArgs.BasicProperties.Headers.Keys)
+                {
+                    byte[] value = basicDeliveryEventArgs.BasicProperties.Headers[headerKey] as byte[];
+                    messageBuilder.Append("Header key: ").Append(headerKey).Append(", value: ").Append(Encoding.UTF8.GetString(value)).Append("; ");
+                }
+                Console.WriteLine(messageBuilder.ToString());
+                model.BasicAck(basicDeliveryEventArgs.DeliveryTag, false);
+            };
+        }
     }
 }
