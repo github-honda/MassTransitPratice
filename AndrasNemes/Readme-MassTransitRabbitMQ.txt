@@ -1,14 +1,23 @@
 From: 011netservice@gmail.com
-Date: 2023-03-16, 持續更新中.
+Date: 2023-03-19, 持續更新中.
 Subject: 適用於 .Net Framework 開發環境的 RabbitMQ 和 MassTransit 示範程式
+
+章節:
+#### Service bus messaging with MassTransit
+#### RabbitMQ.NET Original series
+#### RabbitMQ.NET Update series
+
+原作者以 .Net Framework 等舊元件寫的示範程式, 筆者改寫為使用新元件及可在 .Net Framework 4.8 環境執行.
+原始碼: https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016  
+文件: https://github.com/github-honda/MassTransitPratice/tree/main/AndrasNemes
 
 ref: Messaging
 https://dotnetcodr.com/messaging/ 
 https://en.gravatar.com/andrasnemes
-原作者以 .Net Framework 等舊元件寫的示範程式, 筆者改寫為使用新元件及可在 .Net Framework 4.8 環境執行.
 
-原始碼: https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016  
-文件: https://github.com/github-honda/MassTransitPratice/tree/main/AndrasNemes
+
+#### Service bus messaging with MassTransit
+開發環境: .Net Framework 4.8, MassTransit.RabbitMQ, 8.0.14
 
 #### RabbitMQ.NET Original series
 □ Part 1. 基本概念

@@ -1,7 +1,12 @@
 From: 011netservice@gmail.com
-Date: 2023-03-16, 持續更新中.
-Subject: MassTransit with RabbitMQ
-File: https://github.com/github-honda/MassTransitPratice/blob/main/ReadmeMassTransit.txt
+Date: 2023-03-20
+Subject: MassTransit, RabbitMQ 原始碼範例
+
+章節:
+#### .NETCore 範例
+#### .Net Framework 範例
+#### 安裝 MassTransit1 RabbitMQ Docker
+#### RabbitMQ Docker 常用指令
 
 歡迎來信交流, 訂購軟體需求.
 
@@ -9,12 +14,8 @@ MassTransit:
   https://masstransit.io/
   https://masstransit-project.com/
   https://github.com/MassTransit/MassTransit
-
-  2016-08 版本 .Net Framework 的範例:
   https://dotnetcodr.com/messaging/
-    原始碼: 
-	https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016  
-  
+ 
 RabbitMQ: 
   https://www.rabbitmq.com/
   
