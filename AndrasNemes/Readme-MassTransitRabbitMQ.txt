@@ -1,5 +1,5 @@
 From: 011netservice@gmail.com
-Date: 2023-03-19, 持續更新中.
+Date: 2023-03-24, 持續更新中.
 Subject: 適用於 .Net Framework 開發環境的 RabbitMQ 和 MassTransit 示範程式
 
 章節:
@@ -7,17 +7,68 @@ Subject: 適用於 .Net Framework 開發環境的 RabbitMQ 和 MassTransit 示�
 #### RabbitMQ.NET Original series
 #### RabbitMQ.NET Update series
 
-原作者以 .Net Framework 等舊元件寫的示範程式, 筆者改寫為使用新元件及可在 .Net Framework 4.8 環境執行.
-原始碼: https://github.com/github-honda/MassTransitPratice/tree/main/Net48/2016Lab/V2016  
-文件: https://github.com/github-honda/MassTransitPratice/tree/main/AndrasNemes
-
-ref: Messaging
+Messaging:
 https://dotnetcodr.com/messaging/ 
-https://en.gravatar.com/andrasnemes
-
+原作者原始碼為 .Net Framework 4.6.1 and MassTransit 3.4.1, 筆者嘗試改寫為使用新元件(.Net Framework 4.8 + MassTransit 8.0.14.0),
 
 #### Service bus messaging with MassTransit
-開發環境: .Net Framework 4.8, MassTransit.RabbitMQ, 8.0.14
+原作者原始碼為 .Net Framework 4.6.1 and MassTransit 3.4.1:
+https://github.com/andras-nemes/messaging-with-mass-transit-introduction
+
+Same as above:  
+https://github.com/github-honda/MassTransitPratice/tree/main/NET461/messaging-with-mass-transit-introduction-master
+
+改寫為使用新元件(.Net Framework 4.8 + MassTransit 8.0.14.0), 達成同樣的功能.
+  直接升級為 .Net Framework 4.8, 但是仍使用舊版 MassTransit 3.4.1, 是OK的:
+
+  嘗試寫為(.Net Framework 4.8 + MassTransit 8.0.14.0): 持續測試中
+  https://github.com/github-honda/MassTransitPratice/tree/main/Net48/ServiceBusMessaging
+
+  
+□ Part 1
+????
+□ Part 2
+□ Part 3
+□ Part 4
+在這些專案紀錄中文備忘
+E:\CodeHelper\cs\MessageQueue\MassTransit\Net48\ServiceBusMessaging\Part4
+https://github.com/github-honda/MassTransitPratice/tree/main/NET461/messaging-with-mass-transit-introduction-master
+
+https://www.codeproject.com/Tips/5352379/Using-MassTransit-with-RabbitMQ-in-ASP-NET-Boilerp
+public override void PostInitialize()
+{
+    IocManager.IocContainer.Register
+    (Component.For<OrderConsumer>().LifestyleTransient());
+
+    var busControl = Bus.Factory.CreateUsingRabbitMq(config =>
+    {
+        config.Host(new Uri("rabbitmq://localhost/"), host =>
+        {
+            host.Username("guest");
+            host.Password("guest");
+        });
+
+        config.ReceiveEndpoint(queueName: "repro-service", endpoint =>
+        {
+            endpoint.Handler<OrderDto>(async context =>
+            {
+                using (var consumer = IocManager.ResolveAsDisposable
+                      <OrderConsumer>(typeof(OrderConsumer)))
+                {
+                    await consumer.Object.Consume(context);
+                }
+            });
+        });
+    });
+
+    IocManager.IocContainer.Register
+       (Component.For<IBus, IBusControl>().Instance(busControl));
+
+    busControl.Start();
+}
+
+
+□ Part 5
 
 #### RabbitMQ.NET Original series
 □ Part 1. 基本概念
